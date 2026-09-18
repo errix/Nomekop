@@ -1,6 +1,6 @@
 # Nomekop
 
-Phone-friendly lookup for **art-forward / illustration-style** Pokémon TCG prints, with current TCGPlayer (USD) and Cardmarket (EUR) snapshots from [pokemontcg.io](https://pokemontcg.io) API v2.
+Phone-friendly lookup for **art-forward / illustration-style** Pokémon TCG prints, with current TCGPlayer (USD) snapshots from [pokemontcg.io](https://pokemontcg.io) API v2. US market only — Cardmarket / EUR is not shown.
 
 Search is **species-first**: you type a name, Nomekop resolves it to National Dex number(s), then queries `nationalPokedexNumbers:{dex}`. Alolan / Galarian / Hisuian / Paldean / costume / TAG TEAM prints of the same species land in one bucket. Forms stay visible on each print row.
 

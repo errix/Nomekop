@@ -28,7 +28,7 @@ import {
   formsForSpecies,
 } from '../config/real-forms';
 import catalogJson from '../data/species-forms-catalog-v1.json';
-import { pickCardmarketPrices, pickTcgplayerPrices } from '../lib/tcgTypes';
+import { formatMoney, pickTcgplayerPrices, pricesFor } from '../lib/tcgTypes';
 import type { TcgCard } from '../lib/tcgTypes';
 
 function card(partial: Partial<TcgCard> & Pick<TcgCard, 'id' | 'name' | 'supertype'>): TcgCard {
@@ -519,7 +519,7 @@ describe('art-forward filter', () => {
 });
 
 describe('prices', () => {
-  it('prefers TCGPlayer holofoil market/mid and Cardmarket trend/avg', () => {
+  it('prefers TCGPlayer holofoil market/mid and does not expose Cardmarket/EUR', () => {
     const tcg = pickTcgplayerPrices({
       prices: {
         normal: { mid: 1, market: 1 },
@@ -527,9 +527,11 @@ describe('prices', () => {
       },
     });
     expect(tcg).toMatchObject({ market: 12.5, mid: 11 });
-    const euro = pickCardmarketPrices({
-      prices: { trendPrice: 9.1, averageSellPrice: 8.4 },
-    });
-    expect(euro).toMatchObject({ trend: 9.1, avg: 8.4 });
+    const charizard = MOCK_CARDS.find((c) => c.id === 'sv3pt5-199')!;
+    const shown = pricesFor(charizard);
+    expect(shown.tcgplayerUsd).toMatchObject({ market: 412.5, mid: 399.99 });
+    expect(shown).not.toHaveProperty('cardmarketEur');
+    expect(formatMoney(shown.tcgplayerUsd?.market)).toBe('$412.50');
+    expect(formatMoney(shown.tcgplayerUsd?.market)).not.toMatch(/€|EUR/i);
   });
 });

@@ -41,33 +41,13 @@ export function PrintCard({ card, formLabel }: Props) {
             <dd>
               {prices.tcgplayerUsd ? (
                 <PriceLink href={prices.tcgplayerUsd.url}>
-                  {formatMoney(prices.tcgplayerUsd.market, 'USD')}
+                  {formatMoney(prices.tcgplayerUsd.market)}
                   <span className="muted"> market</span>
                   {prices.tcgplayerUsd.mid != null && (
                     <>
                       <br />
-                      {formatMoney(prices.tcgplayerUsd.mid, 'USD')}
+                      {formatMoney(prices.tcgplayerUsd.mid)}
                       <span className="muted"> mid</span>
-                    </>
-                  )}
-                </PriceLink>
-              ) : (
-                '—'
-              )}
-            </dd>
-          </div>
-          <div>
-            <dt>Cardmarket EUR</dt>
-            <dd>
-              {prices.cardmarketEur ? (
-                <PriceLink href={prices.cardmarketEur.url}>
-                  {formatMoney(prices.cardmarketEur.trend, 'EUR')}
-                  <span className="muted"> trend</span>
-                  {prices.cardmarketEur.avg != null && (
-                    <>
-                      <br />
-                      {formatMoney(prices.cardmarketEur.avg, 'EUR')}
-                      <span className="muted"> avg</span>
                     </>
                   )}
                 </PriceLink>
