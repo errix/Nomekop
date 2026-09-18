@@ -1,13 +1,12 @@
 import type { ReactNode } from 'react';
-import { formatFacetLabel, type FormFacetId } from '../lib/species';
 import { formatMoney, pricesFor, type TcgCard } from '../lib/tcgTypes';
 
 type Props = {
   card: TcgCard;
-  facets: FormFacetId[];
+  formLabel?: string;
 };
 
-export function PrintCard({ card, facets }: Props) {
+export function PrintCard({ card, formLabel }: Props) {
   const prices = pricesFor(card);
   const image = card.images?.large ?? card.images?.small;
   const setLabel = [card.set?.name, card.number].filter(Boolean).join(' · ');
@@ -31,11 +30,9 @@ export function PrintCard({ card, facets }: Props) {
         <h3>{card.name}</h3>
         <p className="print-meta">{setLabel}</p>
         {card.rarity && <p className="rarity">{card.rarity}</p>}
-        {facets.length > 0 && (
+        {formLabel && (
           <ul className="facets">
-            {facets.map((facet) => (
-              <li key={facet}>{formatFacetLabel(facet)}</li>
-            ))}
+            <li>{formLabel}</li>
           </ul>
         )}
         <dl className="prices">

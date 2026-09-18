@@ -10,11 +10,12 @@ import {
 } from '../lib/artForward';
 import { resolveSpecies, suggestSpecies } from '../lib/pokedex';
 import {
-  cardFormFacets,
+  catalogForDex,
   countFormFilters,
   isBaseFormCard,
   normalizeSpeciesToken,
 } from '../lib/species';
+import { assignRealForm, formsForSpecies } from '../config/real-forms';
 import { pickCardmarketPrices, pickTcgplayerPrices } from '../lib/tcgTypes';
 import type { TcgCard } from '../lib/tcgTypes';
 
@@ -55,6 +56,10 @@ describe('taxonomy config', () => {
     expect(TAXONOMY.artForward.raritiesInclude).not.toContain('Black White Rare');
     expect(TAXONOMY.artForward.exclude.raritiesUnlessGallery).toContain('Double Rare');
     expect(TAXONOMY.artForward.exclude.raritiesUnlessGallery).toContain('Promo');
+  });
+
+  it('does not treat Radiant as a form facet', () => {
+    expect(TAXONOMY.species.nameNormalize.formFacets.map((f) => f.id)).not.toContain('radiant');
   });
 });
 
@@ -211,33 +216,110 @@ describe('art-forward filter', () => {
     const names = prints.map((c) => c.name).sort();
     expect(names).toEqual(['Alolan Meowth', 'Galarian Meowth', 'Meowth']);
     expect(prints.every((c) => belongsToDex(c, 52))).toBe(true);
-    expect(cardFormFacets(prints.find((c) => c.name === 'Alolan Meowth')!)).toContain('alolan');
-    expect(cardFormFacets(prints.find((c) => c.name === 'Galarian Meowth')!)).toContain(
+    expect(assignRealForm(prints.find((c) => c.name === 'Alolan Meowth')!, 52, 'Meowth')).toBe(
+      'alolan',
+    );
+    expect(assignRealForm(prints.find((c) => c.name === 'Galarian Meowth')!, 52, 'Meowth')).toBe(
       'galarian',
     );
   });
 
-  it('counts Base separately from regional form pills', () => {
+  it('catalog-drives Meowth pills including Gigantamax at 0; Radiant is not a form', () => {
     const prints = [
       card({ id: 'b1', name: 'Meowth', supertype: 'Pokémon' }),
       card({ id: 'b2', name: 'Meowth ex', supertype: 'Pokémon' }),
-      card({ id: "b3", name: "Team Rocket's Meowth", supertype: 'Pokémon' }),
+      card({ id: 'b3', name: "Team Rocket's Meowth", supertype: 'Pokémon' }),
+      card({ id: 'r1', name: 'Radiant Meowth', supertype: 'Pokémon' }),
       card({ id: 'a1', name: 'Alolan Meowth', supertype: 'Pokémon' }),
       card({ id: 'g1', name: 'Galarian Meowth', supertype: 'Pokémon' }),
       card({ id: 'g2', name: 'Galarian Meowth', supertype: 'Pokémon' }),
     ];
-    expect(prints.filter(isBaseFormCard).map((c) => c.name)).toEqual([
+    expect(prints.filter((c) => isBaseFormCard(c, 52)).map((c) => c.name)).toEqual([
       'Meowth',
       'Meowth ex',
       "Team Rocket's Meowth",
+      'Radiant Meowth',
     ]);
-    const counts = countFormFilters(prints);
-    expect(counts.base).toBe(3);
-    expect(counts.tagged).toEqual([
-      { id: 'galarian', count: 2 },
-      { id: 'alolan', count: 1 },
+    const counts = countFormFilters(prints, 52);
+    expect(counts.forms.map((f) => f.id)).toEqual(['base', 'alolan', 'galarian', 'gigantamax']);
+    expect(counts.forms.find((f) => f.id === 'base')?.count).toBe(4);
+    expect(counts.forms.find((f) => f.id === 'alolan')?.count).toBe(1);
+    expect(counts.forms.find((f) => f.id === 'galarian')?.count).toBe(2);
+    expect(counts.forms.find((f) => f.id === 'gigantamax')?.count).toBe(0);
+    expect(counts.forms.some((f) => f.label === 'Radiant')).toBe(false);
+  });
+
+  it('catalogs Charizard Base / Mega X / Mega Y / Gigantamax including zeros', () => {
+    const ids = formsForSpecies(6, 'Charizard').map((f) => f.id);
+    expect(ids).toEqual(['base', 'mega-x', 'mega-y', 'gigantamax']);
+    const prints = [
+      card({ id: 'b', name: 'Charizard', supertype: 'Pokémon' }),
+      card({ id: 'v', name: 'Charizard V', supertype: 'Pokémon', subtypes: ['V'] }),
+      card({
+        id: 'x',
+        name: 'Mega Charizard X ex',
+        supertype: 'Pokémon',
+        subtypes: ['MEGA', 'ex'],
+        types: ['Fire', 'Dragon'],
+      }),
+      card({
+        id: 'm',
+        name: 'M Charizard-EX',
+        supertype: 'Pokémon',
+        subtypes: ['MEGA'],
+        types: ['Fire', 'Dragon'],
+      }),
+      card({
+        id: 'y',
+        name: 'Mega Charizard Y ex',
+        supertype: 'Pokémon',
+        subtypes: ['MEGA', 'ex'],
+        types: ['Fire'],
+      }),
+      card({
+        id: 'g',
+        name: 'Charizard VMAX',
+        supertype: 'Pokémon',
+        subtypes: ['VMAX'],
+      }),
+      card({ id: 'rad', name: 'Radiant Charizard', supertype: 'Pokémon' }),
+    ];
+    const counts = countFormFilters(prints, 6);
+    expect(counts.forms.find((f) => f.id === 'base')?.count).toBe(3);
+    expect(counts.forms.find((f) => f.id === 'mega-x')?.label).toBe('Mega Charizard X');
+    expect(counts.forms.find((f) => f.id === 'mega-x')?.count).toBe(2);
+    expect(counts.forms.find((f) => f.id === 'mega-y')?.label).toBe('Mega Charizard Y');
+    expect(counts.forms.find((f) => f.id === 'mega-y')?.count).toBe(1);
+    expect(counts.forms.find((f) => f.id === 'gigantamax')?.label).toBe('Gigantamax');
+    expect(counts.forms.find((f) => f.id === 'gigantamax')?.count).toBe(1);
+  });
+
+  it('catalogs Lucario Base / Mega / Mega Z even when Mega Z is 0', () => {
+    expect(formsForSpecies(448, 'Lucario').map((f) => f.label)).toEqual([
+      'Base',
+      'Mega',
+      'Mega Z',
     ]);
-    expect(counts.base + counts.tagged.reduce((sum, t) => sum + t.count, 0)).toBe(prints.length);
+    const prints = [
+      card({ id: 'b', name: 'Lucario', supertype: 'Pokémon' }),
+      card({
+        id: 'm',
+        name: 'Mega Lucario ex',
+        supertype: 'Pokémon',
+        subtypes: ['MEGA', 'ex'],
+      }),
+    ];
+    const counts = countFormFilters(prints, 448);
+    expect(counts.forms.find((f) => f.id === 'mega')?.count).toBe(1);
+    expect(counts.forms.find((f) => f.id === 'mega-z')?.count).toBe(0);
+    expect(counts.forms.find((f) => f.label === 'Mega Z')?.count).toBe(0);
+  });
+
+  it('still exposes Base for single-form species like Weedle', () => {
+    expect(catalogForDex(13).map((f) => f.id)).toEqual(['base']);
+    const counts = countFormFilters([], 13);
+    expect(counts.all).toBe(0);
+    expect(counts.forms).toEqual([{ id: 'base', label: 'Base', count: 0 }]);
   });
 
   it('does not treat Detective Pikachu play-rarity as art-forward', () => {
