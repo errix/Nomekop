@@ -8,6 +8,9 @@ import {
 
 export type { FormFacetId };
 
+/** All-forms / Base / a tagged form facet. */
+export type FormFilter = FormFacetId | 'all' | 'base';
+
 const OWNER_RE = new RegExp(OWNER_POSSESSIVE_PATTERN, 'i');
 
 export function stripOwnerPrefix(name: string): string {
@@ -69,6 +72,36 @@ export function cardFormFacets(card: {
   }
 
   return hits;
+}
+
+/** True when the print has no regional / form facet (owner + combat tokens still count as Base). */
+export function isBaseFormCard(card: { name?: string; subtypes?: string[] }): boolean {
+  return cardFormFacets(card).length === 0;
+}
+
+export function countFormFilters(cards: { name?: string; subtypes?: string[] }[]): {
+  base: number;
+  tagged: { id: FormFacetId; count: number }[];
+} {
+  const counts = new Map<FormFacetId, number>();
+  let base = 0;
+  for (const card of cards) {
+    const tags = cardFormFacets(card);
+    if (tags.length === 0) base += 1;
+    for (const id of tags) counts.set(id, (counts.get(id) ?? 0) + 1);
+  }
+  return {
+    base,
+    tagged: [...counts.entries()]
+      .map(([id, count]) => ({ id, count }))
+      .sort((a, b) => b.count - a.count),
+  };
+}
+
+export function formatFormFilterLabel(id: FormFilter): string {
+  if (id === 'all') return 'All forms';
+  if (id === 'base') return 'Base';
+  return formatFacetLabel(id);
 }
 
 export function formatFacetLabel(id: FormFacetId): string {

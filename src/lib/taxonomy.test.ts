@@ -9,7 +9,12 @@ import {
   luceneSpeciesQuery,
 } from '../lib/artForward';
 import { resolveSpecies, suggestSpecies } from '../lib/pokedex';
-import { cardFormFacets, normalizeSpeciesToken } from '../lib/species';
+import {
+  cardFormFacets,
+  countFormFilters,
+  isBaseFormCard,
+  normalizeSpeciesToken,
+} from '../lib/species';
 import { pickCardmarketPrices, pickTcgplayerPrices } from '../lib/tcgTypes';
 import type { TcgCard } from '../lib/tcgTypes';
 
@@ -210,6 +215,29 @@ describe('art-forward filter', () => {
     expect(cardFormFacets(prints.find((c) => c.name === 'Galarian Meowth')!)).toContain(
       'galarian',
     );
+  });
+
+  it('counts Base separately from regional form pills', () => {
+    const prints = [
+      card({ id: 'b1', name: 'Meowth', supertype: 'Pokémon' }),
+      card({ id: 'b2', name: 'Meowth ex', supertype: 'Pokémon' }),
+      card({ id: "b3", name: "Team Rocket's Meowth", supertype: 'Pokémon' }),
+      card({ id: 'a1', name: 'Alolan Meowth', supertype: 'Pokémon' }),
+      card({ id: 'g1', name: 'Galarian Meowth', supertype: 'Pokémon' }),
+      card({ id: 'g2', name: 'Galarian Meowth', supertype: 'Pokémon' }),
+    ];
+    expect(prints.filter(isBaseFormCard).map((c) => c.name)).toEqual([
+      'Meowth',
+      'Meowth ex',
+      "Team Rocket's Meowth",
+    ]);
+    const counts = countFormFilters(prints);
+    expect(counts.base).toBe(3);
+    expect(counts.tagged).toEqual([
+      { id: 'galarian', count: 2 },
+      { id: 'alolan', count: 1 },
+    ]);
+    expect(counts.base + counts.tagged.reduce((sum, t) => sum + t.count, 0)).toBe(prints.length);
   });
 
   it('does not treat Detective Pikachu play-rarity as art-forward', () => {
