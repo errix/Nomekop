@@ -37,7 +37,7 @@ Lookups send `q=nationalPokedexNumbers:{dex}` (the species join key — not a na
 
 A key is optional: the public API works without one at a much lower rate limit. If the live request fails (rate limit, network), the app falls back to a **small sample dataset** so the UI and art-forward filter can still be reviewed. The page banner says when sample data is in use.
 
-**Recent solds** on each tile are example comps from [`src/lib/solds.ts`](src/lib/solds.ts) (`loadSoldRange` is the hook for a future free feed). pokemontcg.io does not publish solds; paid marketplaces are not wired. Charizard `sv3pt5-199` matches the locked mock ($385 / $405 / $428, 14d · 11 sold). The tile bar is **raw** inliers only; graded comps and outliers live on the detail sheet. Thin samples dim the `Nd · N sold` caption but do not hide it.
+**Recent solds** on each tile are example comps from [`src/lib/solds.ts`](src/lib/solds.ts) until a free feed exists (`loadSoldRange` is the hook for a future **TCGPlayer NM-raw** solds feed — no paid API, no scrape). pokemontcg.io stays catalog/identity and does not publish solds. The **TCGPlayer** and **eBay** buttons under the bar are live venue deep links (product page + sold/completed search); eBay solds are verify-only and are not the bar feed. Charizard `sv3pt5-199` matches the locked mock ($385 / $405 / $428, `14d · 11 sold · TCGPlayer`). The tile bar is **raw** inliers only; graded comps and outliers live on the detail sheet. Thin samples dim the caption but do not hide it.
 
 ## What is included (slice 1)
 

@@ -6,6 +6,7 @@ import {
   isThinSoldCount,
   loadSoldRange,
   rangePercent,
+  soldRangeCaption,
 } from './solds';
 
 describe('sold range adapter', () => {
@@ -17,7 +18,7 @@ describe('sold range adapter', () => {
     expect(range.high).toBe(428);
     expect(range.windowDays).toBe(14);
     expect(range.soldCount).toBe(11);
-    expect(`${range.windowDays}d · ${range.soldCount} sold`).toBe('14d · 11 sold');
+    expect(soldRangeCaption(range)).toBe('14d · 11 sold · TCGPlayer');
     expect(range.kind).toBe('raw');
     expect(range.example).toBe(true);
 
@@ -48,7 +49,7 @@ describe('sold range adapter', () => {
     const card = MOCK_CARDS.find((item) => item.id === 'sv3pt5-199')!;
     const graded = loadSoldRange(card, 'graded')!;
     expect(isThinSoldCount(graded.soldCount)).toBe(true);
-    expect(`${graded.windowDays}d · ${graded.soldCount} sold`).toMatch(/\d+d · \d+ sold/);
+    expect(soldRangeCaption(graded)).toMatch(/\d+d · \d+ sold · TCGPlayer/);
   });
 
   it('still builds an example bar for other prints from TCGPlayer USD', () => {

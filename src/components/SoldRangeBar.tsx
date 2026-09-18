@@ -2,16 +2,44 @@ import {
   formatCompactUsd,
   isThinSoldCount,
   rangePercent,
+  soldRangeCaption,
   type SoldRange,
 } from '../lib/solds';
 
 type Props = {
   range: SoldRange;
   market?: number;
+  tcgPlayerUrl?: string;
+  ebayUrl?: string;
   onOpenDetail: () => void;
 };
 
-export function SoldRangeBar({ range, market, onOpenDetail }: Props) {
+function VenueButton({
+  href,
+  label,
+  kind,
+}: {
+  href?: string;
+  label: 'TCGPlayer' | 'eBay';
+  kind: 'tcg' | 'ebay';
+}) {
+  const className = `venue-btn venue-${kind}`;
+  if (!href) {
+    return (
+      <span className={`${className} is-disabled`} aria-disabled="true">
+        {label}
+      </span>
+    );
+  }
+
+  return (
+    <a className={className} href={href} target="_blank" rel="noopener noreferrer">
+      {label}
+    </a>
+  );
+}
+
+export function SoldRangeBar({ range, market, tcgPlayerUrl, ebayUrl, onOpenDetail }: Props) {
   const midPct = rangePercent(range.mid, range.low, range.high);
   const marketPct = market == null ? undefined : rangePercent(market, range.low, range.high);
   const thin = isThinSoldCount(range.soldCount);
@@ -37,9 +65,13 @@ export function SoldRangeBar({ range, market, onOpenDetail }: Props) {
           )}
         </div>
       </div>
-      <p className={thin ? 'range-caption is-thin' : 'range-caption'}>
-        {range.windowDays}d · {range.soldCount} sold
-      </p>
+      <p className={thin ? 'range-caption is-thin' : 'range-caption'}>{soldRangeCaption(range)}</p>
+      {(tcgPlayerUrl || ebayUrl) && (
+        <div className="venue-row">
+          <VenueButton href={tcgPlayerUrl} label="TCGPlayer" kind="tcg" />
+          <VenueButton href={ebayUrl} label="eBay" kind="ebay" />
+        </div>
+      )}
       {range.example && <p className="range-badge">Example data · not live comps</p>}
       <button type="button" className="range-open" onClick={onOpenDetail}>
         Last solds & filters

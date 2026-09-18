@@ -1,11 +1,14 @@
 /**
  * Recent-solds adapter.
  *
- * Live public solds are not wired yet (pokemontcg.io has no solds feed;
- * eBay/TCGPlayer solds are paid or ToS-restricted). `loadSoldRange`
- * is the hook: swap MOCK_SOLDS / exampleFromUsd for a free feed later.
+ * Primary data intent for the tile bar is TCGPlayer recent sales (NM raw).
+ * That feed is not wired yet — no paid API, no scrape. `loadSoldRange`
+ * is the hook: swap MOCK_SOLDS / exampleFromUsd for a free TCGPlayer
+ * NM-raw solds feed later.
  *
- * Until then every bar is example data (badge on the tile).
+ * eBay solds are not the bar feed (secondary verify via deep link only).
+ * pokemontcg.io stays catalog/identity. Until a free feed exists every
+ * bar is example data (badge on the tile).
  */
 import { MOCK_SOLDS } from '../data/solds-mock';
 import { pricesFor, type TcgCard } from './tcgTypes';
@@ -36,6 +39,11 @@ export const THIN_SOLD_THRESHOLD = 5;
 
 export function isThinSoldCount(count: number): boolean {
   return count > 0 && count < THIN_SOLD_THRESHOLD;
+}
+
+/** Locked tile caption: window · count · TCGPlayer (primary solds intent). */
+export function soldRangeCaption(range: Pick<SoldRange, 'windowDays' | 'soldCount'>): string {
+  return `${range.windowDays}d · ${range.soldCount} sold · TCGPlayer`;
 }
 
 export function rangePercent(value: number, low: number, high: number): number {
