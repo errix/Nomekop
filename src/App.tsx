@@ -61,7 +61,7 @@ export default function App() {
     return prints.filter((card) => cardFormFacets(card).includes(facet));
   }, [result, facet]);
 
-  const showFormPills = facets.tagged.length > 0;
+  const showFormPills = Boolean(result && result.prints.length > 0);
 
   return (
     <div className="app">
@@ -83,13 +83,6 @@ export default function App() {
               {species.name}{' '}
               <span className="dex-pill">#{String(species.n).padStart(4, '0')}</span>
             </h2>
-            {result && (
-              <p className="count">
-                {visible.length} print{visible.length === 1 ? '' : 's'}
-                {facet !== 'all' ? ` · ${formatFormFilterLabel(facet)}` : ''}
-                {result.source === 'live' ? ' · live pokemontcg.io' : ' · sample data'}
-              </p>
-            )}
           </div>
 
           {result?.warning && <p className="banner">{result.warning}</p>}
@@ -103,7 +96,7 @@ export default function App() {
                 selected={facet === 'all'}
                 onSelect={() => setFacet('all')}
               />
-              {facets.base > 0 && (
+              {facets.tagged.length > 0 && facets.base > 0 && (
                 <FormPill
                   label="Base"
                   count={facets.base}

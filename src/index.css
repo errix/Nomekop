@@ -164,10 +164,6 @@ a {
   color: var(--gold);
 }
 
-.count {
-  margin: 0.25rem 0 0;
-}
-
 .banner,
 .empty,
 .hint {
