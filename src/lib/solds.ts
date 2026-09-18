@@ -38,8 +38,8 @@ export type SoldRange = {
   low: number;
   mid: number;
   high: number;
-  source: 'mock';
-  example: true;
+  source: 'mock' | 'tcgplayer';
+  example: boolean;
   sales: SoldSale[];
 };
 
@@ -61,9 +61,12 @@ export function isThinSoldCount(count: number): boolean {
   return count > 0 && count < THIN_SOLD_THRESHOLD;
 }
 
-/** Locked tile caption: window · count · TCGPlayer (primary solds intent). */
-export function soldRangeCaption(range: Pick<SoldRange, 'windowDays' | 'soldCount'>): string {
-  return `${range.windowDays}d · ${range.soldCount} sold · TCGPlayer`;
+/** Fixture caption is `Nd · N sold`. ` · TCGPlayer` is live-feed only. */
+export function soldRangeCaption(
+  range: Pick<SoldRange, 'windowDays' | 'soldCount' | 'example'>,
+): string {
+  const base = `${range.windowDays}d · ${range.soldCount} sold`;
+  return range.example ? base : `${base} · TCGPlayer`;
 }
 
 export function rangePercent(value: number, low: number, high: number): number {

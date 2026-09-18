@@ -23,7 +23,8 @@ describe('sold range adapter', () => {
     expect(range.high).toBe(428);
     expect(range.windowDays).toBe(14);
     expect(range.soldCount).toBe(11);
-    expect(soldRangeCaption(range)).toBe('14d · 11 sold · TCGPlayer');
+    expect(soldRangeCaption(range)).toBe('14d · 11 sold');
+    expect(soldRangeCaption(range)).not.toContain('TCGPlayer');
     expect(range.kind).toBe('raw');
     expect(range.example).toBe(true);
 
@@ -54,7 +55,8 @@ describe('sold range adapter', () => {
     const card = MOCK_CARDS.find((item) => item.id === 'sv3pt5-199')!;
     const graded = loadSoldRange(card, 'graded', DEV_ENV)!;
     expect(isThinSoldCount(graded.soldCount)).toBe(true);
-    expect(soldRangeCaption(graded)).toMatch(/\d+d · \d+ sold · TCGPlayer/);
+    expect(soldRangeCaption(graded)).toMatch(/^\d+d · \d+ sold$/);
+    expect(soldRangeCaption(graded)).not.toContain('TCGPlayer');
   });
 
   it('does not synthesize L/M/H from Market/Mid when a print has no fixture solds', () => {
@@ -70,5 +72,15 @@ describe('sold range adapter', () => {
     expect(loadSoldRange(card, 'raw', PROD_ENV)).toBeUndefined();
     expect(loadSoldRange(card, 'raw', { DEV: false, VITE_SHOW_EXAMPLE_SOLDS: 'true' })?.low).toBe(385);
     expect(loadLiveSoldRange(card, 'raw')).toBeUndefined();
+  });
+
+  it('reserves · TCGPlayer for a live feed, not fixtures', () => {
+    const live = {
+      windowDays: 14,
+      soldCount: 11,
+      example: false,
+    } as const;
+    expect(soldRangeCaption(live)).toBe('14d · 11 sold · TCGPlayer');
+    expect(soldRangeCaption({ windowDays: 14, soldCount: 11, example: true })).toBe('14d · 11 sold');
   });
 });
