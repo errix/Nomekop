@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { exampleSoldsEnabled, loadSoldRange } from '../lib/solds';
 import { formatMoney, pricesFor, type TcgCard } from '../lib/tcgTypes';
-import { loadSoldRange } from '../lib/solds';
+import { venuesFor } from '../lib/venues';
 import { SoldDetailSheet } from './SoldDetailSheet';
 import { SoldRangeBar } from './SoldRangeBar';
 
@@ -14,6 +15,7 @@ export function PrintCard({ card, formLabel }: Props) {
   const prices = pricesFor(card);
   const usd = prices.tcgplayerUsd;
   const solds = loadSoldRange(card, 'raw');
+  const venues = venuesFor(card);
   const image = card.images?.large ?? card.images?.small;
   const setLabel = [card.set?.name, card.number].filter(Boolean).join(' · ');
 
@@ -58,10 +60,13 @@ export function PrintCard({ card, formLabel }: Props) {
         ) : (
           <p className="price-source">TCGPlayer USD</p>
         )}
-        {solds && (
+        {(solds || venues.tcgPlayer || venues.ebay) && (
           <SoldRangeBar
             range={solds}
             market={usd?.market}
+            tcgPlayerUrl={venues.tcgPlayer}
+            ebayUrl={venues.ebay}
+            unavailable={!solds && !exampleSoldsEnabled()}
             onOpenDetail={() => setDetailOpen(true)}
           />
         )}
