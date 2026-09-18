@@ -15,6 +15,7 @@ import {
   isBaseFormCard,
   normalizeSpeciesToken,
 } from '../lib/species';
+import { FORM_COVERAGE_PROBES, NEVER_FORM_PILL_LABELS } from '../config/form-coverage-probes';
 import {
   CATALOG_RULES,
   CATALOG_SPECIES_COUNT,
@@ -351,29 +352,87 @@ describe('art-forward filter', () => {
   });
 
   it('probe list stays catalog-driven even with an empty result set', () => {
-    const probes: { dex: number; name: string; labels: string[] }[] = [
-      { dex: 6, name: 'Charizard', labels: ['Base', 'Mega Charizard X', 'Mega Charizard Y', 'Gigantamax'] },
-      { dex: 13, name: 'Weedle', labels: ['Base'] },
-      { dex: 25, name: 'Pikachu', labels: ['Base', 'Gigantamax'] },
-      { dex: 26, name: 'Raichu', labels: ['Base', 'Alolan', 'Mega Raichu X', 'Mega Raichu Y'] },
-      { dex: 52, name: 'Meowth', labels: ['Base', 'Alolan', 'Galarian', 'Gigantamax'] },
-      { dex: 150, name: 'Mewtwo', labels: ['Base', 'Mega Mewtwo X', 'Mega Mewtwo Y'] },
-      { dex: 359, name: 'Absol', labels: ['Base', 'Mega', 'Mega Z'] },
-      { dex: 386, name: 'Deoxys', labels: ['Base', 'Attack Forme', 'Defense Forme', 'Speed Forme'] },
-      { dex: 445, name: 'Garchomp', labels: ['Base', 'Mega', 'Mega Z'] },
-      { dex: 448, name: 'Lucario', labels: ['Base', 'Mega', 'Mega Z'] },
-      { dex: 641, name: 'Tornadus', labels: ['Base', 'Therian'] },
-      { dex: 890, name: 'Eternatus', labels: ['Base', 'Eternamax'] },
-      { dex: 892, name: 'Urshifu', labels: ['Base', 'Rapid Strike', 'Gigantamax'] },
-    ];
-
-    for (const probe of probes) {
-      expect(formsForSpecies(probe.dex, probe.name).map((form) => form.label)).toEqual(probe.labels);
+    for (const probe of FORM_COVERAGE_PROBES) {
+      expect(formsForSpecies(probe.dex, probe.name).map((form) => form.label)).toEqual([
+        ...probe.labels,
+      ]);
       const empty = countFormFilters([], probe.dex);
       expect(empty.all).toBe(0);
-      expect(empty.forms.map((form) => form.label)).toEqual(probe.labels);
+      expect(empty.forms.map((form) => form.label)).toEqual([...probe.labels]);
       expect(empty.forms.every((form) => form.count === 0)).toBe(true);
+      expect(
+        empty.forms.some((form) =>
+          (NEVER_FORM_PILL_LABELS as readonly string[]).includes(form.label),
+        ),
+      ).toBe(false);
     }
+  });
+
+  it('does not turn Pikachu costumes into form pills', () => {
+    const prints = [
+      card({ id: 'b', name: 'Pikachu', supertype: 'Pokémon' }),
+      card({ id: 'd', name: 'Detective Pikachu', supertype: 'Pokémon' }),
+      card({ id: 'f', name: 'Flying Pikachu', supertype: 'Pokémon' }),
+      card({ id: 'g', name: 'Pikachu VMAX', supertype: 'Pokémon', subtypes: ['VMAX'] }),
+    ];
+    const counts = countFormFilters(prints, 25);
+    expect(counts.forms.map((form) => form.label)).toEqual(['Base', 'Gigantamax']);
+    expect(counts.forms.find((form) => form.id === 'base')?.count).toBe(3);
+    expect(counts.forms.find((form) => form.id === 'gigantamax')?.count).toBe(1);
+    expect(assignRealForm({ name: 'Detective Pikachu' }, 25, 'Pikachu')).toBe('base');
+  });
+
+  it('keeps Raichu Mega X/Y pills at count 0 until TCG prints exist', () => {
+    const counts = countFormFilters(
+      [
+        card({ id: 'b', name: 'Raichu', supertype: 'Pokémon' }),
+        card({ id: 'a', name: 'Alolan Raichu', supertype: 'Pokémon' }),
+      ],
+      26,
+    );
+    expect(counts.forms.map((form) => form.label)).toEqual([
+      'Base',
+      'Alolan',
+      'Mega Raichu X',
+      'Mega Raichu Y',
+    ]);
+    expect(counts.forms.find((form) => form.id === 'mega-x')?.count).toBe(0);
+    expect(counts.forms.find((form) => form.id === 'mega-y')?.count).toBe(0);
+  });
+
+  it('assigns Lucario Mega vs Mega Z without false positives', () => {
+    expect(
+      assignRealForm({ name: 'Mega Lucario ex', subtypes: ['MEGA', 'ex'] }, 448, 'Lucario'),
+    ).toBe('mega');
+    expect(assignRealForm({ name: 'M Lucario-EX', subtypes: ['MEGA'] }, 448, 'Lucario')).toBe(
+      'mega',
+    );
+    expect(
+      assignRealForm({ name: 'Mega Lucario Z ex', subtypes: ['MEGA', 'ex'] }, 448, 'Lucario'),
+    ).toBe('mega-z');
+    const counts = countFormFilters(
+      [
+        card({ id: 'b', name: 'Lucario', supertype: 'Pokémon' }),
+        card({
+          id: 'm',
+          name: 'Mega Lucario ex',
+          supertype: 'Pokémon',
+          subtypes: ['MEGA', 'ex'],
+        }),
+        card({ id: 'mx', name: 'M Lucario-EX', supertype: 'Pokémon', subtypes: ['MEGA'] }),
+      ],
+      448,
+    );
+    expect(counts.forms.find((form) => form.id === 'mega')?.count).toBe(2);
+    expect(counts.forms.find((form) => form.id === 'mega-z')?.label).toBe('Mega Z');
+    expect(counts.forms.find((form) => form.id === 'mega-z')?.count).toBe(0);
+  });
+
+  it('assigns Deoxys Formes from catalog labels', () => {
+    expect(assignRealForm({ name: 'Deoxys' }, 386, 'Deoxys')).toBe('base');
+    expect(assignRealForm({ name: 'Deoxys Attack Forme' }, 386, 'Deoxys')).toBe('attack-forme');
+    expect(assignRealForm({ name: 'Deoxys Defense Forme' }, 386, 'Deoxys')).toBe('defense-forme');
+    expect(assignRealForm({ name: 'Deoxys Speed Forme' }, 386, 'Deoxys')).toBe('speed-forme');
   });
 
   it('does not treat Detective Pikachu play-rarity as art-forward', () => {
