@@ -406,6 +406,10 @@ a {
   margin-top: 14px;
 }
 
+.range > .venue-row:first-child {
+  margin-top: 0;
+}
+
 .venue-btn {
   display: flex;
   align-items: center;

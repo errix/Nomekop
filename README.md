@@ -37,7 +37,13 @@ Lookups send `q=nationalPokedexNumbers:{dex}` (the species join key — not a na
 
 A key is optional: the public API works without one at a much lower rate limit. If the live request fails (rate limit, network), the app falls back to a **small sample dataset** so the UI and art-forward filter can still be reviewed. The page banner says when sample data is in use.
 
-**Recent solds** on each tile are example comps from [`src/lib/solds.ts`](src/lib/solds.ts) until a free feed exists (`loadSoldRange` is the hook for a future **TCGPlayer NM-raw** solds feed — no paid API, no scrape). pokemontcg.io stays catalog/identity and does not publish solds. The **TCGPlayer** and **eBay** buttons under the bar are live venue deep links (product page + sold/completed search); eBay solds are verify-only and are not the bar feed. Charizard `sv3pt5-199` matches the locked mock ($385 / $405 / $428, `14d · 11 sold · TCGPlayer`). The tile bar is **raw** inliers only; graded comps and outliers live on the detail sheet. Thin samples dim the caption but do not hide it.
+**Recent solds.** There is no free live TCGPlayer recent-sales feed yet (no paid API, no scrape). [`src/lib/solds.ts`](src/lib/solds.ts) `loadLiveSoldRange` is the swap hook for a future partner-key / vendor adapter keyed to TCGPlayer product IDs (NM raw, windowed, outlier-aware; graded stays a separate series). Until then:
+
+- The bar is **fixture/example comps only** (`MOCK_SOLDS`, mock-flagged). L / median / H + N + window come from those rows. We do **not** synthesize solds from Market/Mid (asks are not clears).
+- Dev shows fixtures (Charizard `sv3pt5-199` is locked to $385 / $405 / $428, `14d · 11 sold · TCGPlayer`). Prod hides the bar and shows **Solds unavailable** unless `VITE_SHOW_EXAMPLE_SOLDS=true`.
+- The **TCGPlayer** and **eBay** buttons are live venue deep links (product page + sold/completed search). eBay solds are verify-only and are not the bar feed. pokemontcg.io stays catalog/identity.
+
+The tile bar is **raw** inliers only; graded comps and outliers live on the detail sheet. Thin samples dim the caption but do not hide it.
 
 ## What is included (slice 1)
 

@@ -2,17 +2,22 @@ import { describe, expect, it } from 'vitest';
 import { MOCK_CARDS } from '../data/mockCards';
 import { formatMoney, pricesFor } from './tcgTypes';
 import {
+  exampleSoldsEnabled,
   formatCompactUsd,
   isThinSoldCount,
+  loadLiveSoldRange,
   loadSoldRange,
   rangePercent,
   soldRangeCaption,
 } from './solds';
 
+const DEV_ENV = { DEV: true } as const;
+const PROD_ENV = { DEV: false, VITE_SHOW_EXAMPLE_SOLDS: undefined } as const;
+
 describe('sold range adapter', () => {
   it('locks Charizard SIR to the mock L/M/H, caption, and market tick', () => {
     const card = MOCK_CARDS.find((item) => item.id === 'sv3pt5-199')!;
-    const range = loadSoldRange(card, 'raw')!;
+    const range = loadSoldRange(card, 'raw', DEV_ENV)!;
     expect(range.low).toBe(385);
     expect(range.mid).toBe(405);
     expect(range.high).toBe(428);
@@ -32,8 +37,8 @@ describe('sold range adapter', () => {
 
   it('keeps raw and graded series separate and leaves outliers off the tile bar', () => {
     const card = MOCK_CARDS.find((item) => item.id === 'sv3pt5-199')!;
-    const raw = loadSoldRange(card, 'raw')!;
-    const graded = loadSoldRange(card, 'graded')!;
+    const raw = loadSoldRange(card, 'raw', DEV_ENV)!;
+    const graded = loadSoldRange(card, 'graded', DEV_ENV)!;
     expect(raw.sales.every((sale) => sale.kind === 'raw')).toBe(true);
     expect(graded.kind).toBe('graded');
     expect(graded.sales.every((sale) => sale.kind === 'graded')).toBe(true);
@@ -47,17 +52,23 @@ describe('sold range adapter', () => {
     expect(isThinSoldCount(3)).toBe(true);
     expect(isThinSoldCount(11)).toBe(false);
     const card = MOCK_CARDS.find((item) => item.id === 'sv3pt5-199')!;
-    const graded = loadSoldRange(card, 'graded')!;
+    const graded = loadSoldRange(card, 'graded', DEV_ENV)!;
     expect(isThinSoldCount(graded.soldCount)).toBe(true);
     expect(soldRangeCaption(graded)).toMatch(/\d+d · \d+ sold · TCGPlayer/);
   });
 
-  it('still builds an example bar for other prints from TCGPlayer USD', () => {
+  it('does not synthesize L/M/H from Market/Mid when a print has no fixture solds', () => {
     const meowth = MOCK_CARDS.find((item) => item.id === 'sv8-227')!;
-    const range = loadSoldRange(meowth, 'raw');
-    expect(range).toBeDefined();
-    expect(range?.example).toBe(true);
-    expect(range?.kind).toBe('raw');
+    expect(loadSoldRange(meowth, 'raw', DEV_ENV)).toBeUndefined();
+    expect(pricesFor(meowth).tcgplayerUsd?.market).toBe(12.4);
     expect(pricesFor(meowth)).not.toHaveProperty('cardmarketEur');
+  });
+
+  it('hides fixture bars in prod unless VITE_SHOW_EXAMPLE_SOLDS is on', () => {
+    const card = MOCK_CARDS.find((item) => item.id === 'sv3pt5-199')!;
+    expect(exampleSoldsEnabled(PROD_ENV)).toBe(false);
+    expect(loadSoldRange(card, 'raw', PROD_ENV)).toBeUndefined();
+    expect(loadSoldRange(card, 'raw', { DEV: false, VITE_SHOW_EXAMPLE_SOLDS: 'true' })?.low).toBe(385);
+    expect(loadLiveSoldRange(card, 'raw')).toBeUndefined();
   });
 });

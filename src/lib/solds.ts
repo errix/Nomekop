@@ -2,16 +2,24 @@
  * Recent-solds adapter.
  *
  * Primary data intent for the tile bar is TCGPlayer recent sales (NM raw).
- * That feed is not wired yet — no paid API, no scrape. `loadSoldRange`
- * is the hook: swap MOCK_SOLDS / exampleFromUsd for a free TCGPlayer
- * NM-raw solds feed later.
+ * No live feed is wired — no scrape, no invented paid API.
+ *
+ * Swap hook: `loadLiveSoldRange` is where a future partner-key / paid-vendor
+ * adapter keyed to TCGPlayer product IDs should land. Same filters later:
+ * NM raw, windowed, outlier-aware, graded as a separate series.
+ *
+ * Until that adapter exists:
+ * - Dev / `VITE_SHOW_EXAMPLE_SOLDS=true`: bar comes only from fixture rows
+ *   (`MOCK_SOLDS` / locked Charizard). Never synthesize L/M/H from Market/Mid
+ *   (asks are not clears).
+ * - Prod default: hide the bar / "Solds unavailable" rather than unlabeled
+ *   fake comps.
  *
  * eBay solds are not the bar feed (secondary verify via deep link only).
- * pokemontcg.io stays catalog/identity. Until a free feed exists every
- * bar is example data (badge on the tile).
+ * pokemontcg.io stays catalog/identity.
  */
 import { MOCK_SOLDS } from '../data/solds-mock';
-import { pricesFor, type TcgCard } from './tcgTypes';
+import type { TcgCard } from './tcgTypes';
 
 export type SoldKind = 'raw' | 'graded';
 
@@ -36,6 +44,18 @@ export type SoldRange = {
 };
 
 export const THIN_SOLD_THRESHOLD = 5;
+
+export type SoldsEnv = {
+  DEV?: boolean;
+  VITE_SHOW_EXAMPLE_SOLDS?: string;
+};
+
+export function exampleSoldsEnabled(env: SoldsEnv = import.meta.env): boolean {
+  const flag = env.VITE_SHOW_EXAMPLE_SOLDS?.trim().toLowerCase();
+  if (flag === 'true' || flag === '1') return true;
+  if (flag === 'false' || flag === '0') return false;
+  return env.DEV === true;
+}
 
 export function isThinSoldCount(count: number): boolean {
   return count > 0 && count < THIN_SOLD_THRESHOLD;
@@ -113,32 +133,26 @@ const LOCKED_RANGES: Record<string, Omit<SoldRange, 'sales'>> = {
   },
 };
 
-function exampleFromUsd(card: TcgCard, kind: SoldKind): SoldRange | undefined {
-  const usd = pricesFor(card).tcgplayerUsd;
-  const center = usd?.market ?? usd?.mid;
-  if (center == null) return undefined;
-  const spread = kind === 'graded' ? 0.08 : 0.05;
-  const low = Math.round(center * (1 - spread));
-  const high = Math.round(center * (1 + spread * 0.8));
-  const mid = Math.round(center * (kind === 'graded' ? 1.02 : 0.98));
-  return {
-    cardId: card.id,
-    kind,
-    windowDays: 14,
-    soldCount: kind === 'graded' ? 3 : 8,
-    low,
-    mid,
-    high,
-    source: 'mock',
-    example: true,
-    sales: [],
-  };
+/**
+ * Future TCGPlayer NM-raw solds feed (partner key / vendor keyed to
+ * product IDs). Returns undefined until that adapter is wired.
+ */
+export function loadLiveSoldRange(_card: TcgCard, _kind: SoldKind = 'raw'): SoldRange | undefined {
+  return undefined;
+}
+
+function fixtureSoldRange(card: TcgCard, kind: SoldKind): SoldRange | undefined {
+  return summarize(card.id, kind, salesFor(card.id, kind));
 }
 
 /** Tile/default series is raw. Graded is a separate series for the detail sheet. */
-export function loadSoldRange(card: TcgCard, kind: SoldKind = 'raw'): SoldRange | undefined {
-  const sales = salesFor(card.id, kind);
-  const fromSales = summarize(card.id, kind, sales);
-  if (fromSales) return fromSales;
-  return exampleFromUsd(card, kind);
+export function loadSoldRange(
+  card: TcgCard,
+  kind: SoldKind = 'raw',
+  env: SoldsEnv = import.meta.env,
+): SoldRange | undefined {
+  const live = loadLiveSoldRange(card, kind);
+  if (live) return live;
+  if (!exampleSoldsEnabled(env)) return undefined;
+  return fixtureSoldRange(card, kind);
 }
