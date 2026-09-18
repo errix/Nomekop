@@ -2,7 +2,9 @@
 
 Phone-friendly lookup for **art-forward / illustration-style** Pokémon TCG prints, with current TCGPlayer (USD) snapshots from [pokemontcg.io](https://pokemontcg.io) API v2. US market only — Cardmarket / EUR is not shown.
 
-Search is **species-first**: you type a name, Nomekop resolves it to National Dex number(s), then queries `nationalPokedexNumbers:{dex}`. Alolan / Galarian / Hisuian / Paldean / costume / TAG TEAM prints of the same species land in one bucket. Forms stay visible on each print row.
+Search is **species-first**: you type a name, Nomekop resolves it to National Dex number(s), then queries `nationalPokedexNumbers:{dex}`. Alolan / Galarian / Hisuian / Paldean / costume / TAG TEAM prints of the same species land in one bucket. Form pills stay in the results chrome; the print grid itself is **image-only**.
+
+**Inspect a print.** Phone grid is two columns of card art (no prices, sold bar, rarity, venue buttons, or honesty badges on the tile). Tap a tile for a **centered modal** with name / set / rarity, TCGPlayer Market + Mid USD, the recent-solds bar, and TCGPlayer / eBay deep links. Modal **X** or the dimmed backdrop returns to the grid. The fullscreen icon opens an **image-only** view; a chevron back-arrow returns to the still-open modal (no X on fullscreen).
 
 ## Run locally
 
@@ -43,7 +45,7 @@ A key is optional: the public API works without one at a much lower rate limit. 
 - Dev shows fixtures (Charizard `sv3pt5-199` is locked to $385 / $405 / $428, `14d · 11 sold`). The caption stays `Nd · N sold` on fixtures; ` · TCGPlayer` is reserved for a real `loadLiveSoldRange` feed. Prod hides the bar and shows **Solds unavailable** unless `VITE_SHOW_EXAMPLE_SOLDS=true`.
 - The **TCGPlayer** and **eBay** buttons are live venue deep links (product page + sold/completed search). eBay solds are verify-only and are not the bar feed. pokemontcg.io stays catalog/identity.
 
-The tile bar is **raw** inliers only; graded comps and outliers live on the detail sheet. Thin samples dim the caption but do not hide it.
+The modal bar is **raw** inliers only; graded comps and outliers live on the detail sheet. Thin samples dim the caption but do not hide it.
 
 ## What is included (slice 1)
 
