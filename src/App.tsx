@@ -5,7 +5,13 @@ import { SearchBar } from './components/SearchBar';
 import { loadSpeciesPrints } from './lib/client';
 import type { SpeciesPrintsResult } from './lib/fetchSpeciesPrints';
 import { getSpeciesByDex, resolveSpecies, type PokedexEntry } from './lib/pokedex';
-import { cardFormFacets, formatFacetLabel, type FormFacetId } from './lib/species';
+import {
+  cardFormFacets,
+  countFormFilters,
+  formatFormFilterLabel,
+  isBaseFormCard,
+  type FormFilter,
+} from './lib/species';
 
 function readInitialQuery(): string {
   const params = new URLSearchParams(window.location.search);
@@ -20,7 +26,7 @@ export default function App() {
   const [result, setResult] = useState<SpeciesPrintsResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [facet, setFacet] = useState<FormFacetId | 'all'>('all');
+  const [facet, setFacet] = useState<FormFilter>('all');
 
   const lookup = useCallback(async (entry: PokedexEntry) => {
     setSpecies(entry);
@@ -45,21 +51,16 @@ export default function App() {
     if (initial) void lookup(initial);
   }, [lookup]);
 
-  const facets = useMemo(() => {
-    const counts = new Map<FormFacetId, number>();
-    for (const card of result?.prints ?? []) {
-      for (const id of cardFormFacets(card)) {
-        counts.set(id, (counts.get(id) ?? 0) + 1);
-      }
-    }
-    return [...counts.entries()].sort((a, b) => b[1] - a[1]);
-  }, [result]);
+  const facets = useMemo(() => countFormFilters(result?.prints ?? []), [result]);
 
   const visible = useMemo(() => {
     const prints = result?.prints ?? [];
     if (facet === 'all') return prints;
+    if (facet === 'base') return prints.filter(isBaseFormCard);
     return prints.filter((card) => cardFormFacets(card).includes(facet));
   }, [result, facet]);
+
+  const showFormPills = facets.tagged.length > 0;
 
   return (
     <div className="app">
@@ -84,7 +85,7 @@ export default function App() {
             {result && (
               <p className="count">
                 {visible.length} print{visible.length === 1 ? '' : 's'}
-                {facet !== 'all' ? ` · ${formatFacetLabel(facet)}` : ''}
+                {facet !== 'all' ? ` · ${formatFormFilterLabel(facet)}` : ''}
                 {result.source === 'live' ? ' · live pokemontcg.io' : ' · sample data'}
               </p>
             )}
@@ -93,7 +94,7 @@ export default function App() {
           {result?.warning && <p className="banner">{result.warning}</p>}
           {error && <p className="banner error">{error}</p>}
 
-          {facets.length > 0 && (
+          {showFormPills && (
             <div className="facet-bar" role="tablist" aria-label="Form facets">
               <button
                 type="button"
@@ -102,14 +103,23 @@ export default function App() {
               >
                 All forms
               </button>
-              {facets.map(([id, count]) => (
+              {facets.base > 0 && (
+                <button
+                  type="button"
+                  className={facet === 'base' ? 'is-on' : undefined}
+                  onClick={() => setFacet('base')}
+                >
+                  Base {facets.base}
+                </button>
+              )}
+              {facets.tagged.map(({ id, count }) => (
                 <button
                   key={id}
                   type="button"
                   className={facet === id ? 'is-on' : undefined}
                   onClick={() => setFacet(id)}
                 >
-                  {formatFacetLabel(id)} {count}
+                  {formatFormFilterLabel(id)} {count}
                 </button>
               ))}
             </div>
@@ -122,7 +132,7 @@ export default function App() {
               speciesName={
                 facet === 'all'
                   ? species.name
-                  : `${species.name} (${formatFacetLabel(facet)})`
+                  : `${species.name} (${formatFormFilterLabel(facet)})`
               }
             />
           )}
