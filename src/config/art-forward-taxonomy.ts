@@ -43,23 +43,23 @@ export const NAME_STRIP_SUFFIXES = [
 /** Regex hint for Team Rocket's / Giovanni's / Rocket's style names. */
 export const OWNER_POSSESSIVE_PATTERN = "^.+['’]s\\s+";
 
+/** Real Pokémon forms only. Radiant / VMAX-as-label / TCG suffixes are not facets. */
 export type FormFacetId =
+  | 'base'
   | 'alolan'
   | 'galarian'
   | 'hisuian'
   | 'paldean'
-  | 'radiant'
   | 'mega'
+  | 'mega-x'
+  | 'mega-y'
+  | 'mega-z'
+  | 'gigantamax'
   | 'primal'
+  | 'eternamax'
   | 'origin-forme'
   | 'black'
-  | 'white'
-  | 'vmax'
-  | 'eternamax'
-  | 'ancient'
-  | 'future'
-  | 'delta'
-  | 'break';
+  | 'white';
 
 export type FormFacetMatch = {
   namePrefix?: readonly string[];
@@ -77,18 +77,16 @@ export const FORM_FACETS: readonly FormFacet[] = [
   { id: 'galarian', match: { namePrefix: ['Galarian '] } },
   { id: 'hisuian', match: { namePrefix: ['Hisuian '] } },
   { id: 'paldean', match: { namePrefix: ['Paldean '] } },
-  { id: 'radiant', match: { namePrefix: ['Radiant '], subtypes: ['Radiant'] } },
   { id: 'mega', match: { namePrefix: ['M ', 'Mega '], subtypes: ['MEGA'] } },
+  { id: 'mega-x', match: { namePrefix: ['Mega '], nameSuffix: [' X', ' X ex'] } },
+  { id: 'mega-y', match: { namePrefix: ['Mega '], nameSuffix: [' Y', ' Y ex'] } },
+  { id: 'mega-z', match: { namePrefix: ['Mega '], nameSuffix: [' Z', ' Z ex'] } },
+  { id: 'gigantamax', match: { nameSuffix: [' VMAX'], subtypes: ['VMAX'] } },
   { id: 'primal', match: { namePrefix: ['Primal '] } },
   { id: 'origin-forme', match: { namePrefix: ['Origin Forme '] } },
   { id: 'black', match: { namePrefix: ['Black '] } },
   { id: 'white', match: { namePrefix: ['White '] } },
-  { id: 'vmax', match: { nameSuffix: [' VMAX'], subtypes: ['VMAX'] } },
   { id: 'eternamax', match: { subtypes: ['Eternamax'] } },
-  { id: 'ancient', match: { subtypes: ['Ancient'] } },
-  { id: 'future', match: { subtypes: ['Future'] } },
-  { id: 'delta', match: { nameSuffix: [' δ'] } },
-  { id: 'break', match: { nameSuffix: [' BREAK'], subtypes: ['BREAK'] } },
 ] as const;
 
 export const SPECIES_NOTES = [

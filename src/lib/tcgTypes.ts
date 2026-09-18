@@ -32,6 +32,7 @@ export type TcgCard = {
   name: string;
   supertype: string;
   subtypes?: string[];
+  types?: string[];
   number?: string;
   artist?: string;
   rarity?: string;

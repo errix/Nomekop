@@ -11,6 +11,7 @@ const SELECT = [
   'name',
   'supertype',
   'subtypes',
+  'types',
   'number',
   'artist',
   'rarity',

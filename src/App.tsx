@@ -7,10 +7,9 @@ import { loadSpeciesPrints } from './lib/client';
 import type { SpeciesPrintsResult } from './lib/fetchSpeciesPrints';
 import { getSpeciesByDex, resolveSpecies, type PokedexEntry } from './lib/pokedex';
 import {
-  cardFormFacets,
+  assignCardForm,
   countFormFilters,
   formatFormFilterLabel,
-  isBaseFormCard,
   type FormFilter,
 } from './lib/species';
 
@@ -52,16 +51,16 @@ export default function App() {
     if (initial) void lookup(initial);
   }, [lookup]);
 
-  const facets = useMemo(() => countFormFilters(result?.prints ?? []), [result]);
+  const facets = useMemo(
+    () => (species ? countFormFilters(result?.prints ?? [], species.n) : { all: 0, forms: [] }),
+    [result, species],
+  );
 
   const visible = useMemo(() => {
     const prints = result?.prints ?? [];
-    if (facet === 'all') return prints;
-    if (facet === 'base') return prints.filter(isBaseFormCard);
-    return prints.filter((card) => cardFormFacets(card).includes(facet));
-  }, [result, facet]);
-
-  const showFormPills = Boolean(result && result.prints.length > 0);
+    if (!species || facet === 'all') return prints;
+    return prints.filter((card) => assignCardForm(card, species.n) === facet);
+  }, [result, facet, species]);
 
   return (
     <div className="app">
@@ -88,33 +87,24 @@ export default function App() {
           {result?.warning && <p className="banner">{result.warning}</p>}
           {error && <p className="banner error">{error}</p>}
 
-          {showFormPills && result && (
-            <div className="facet-bar" role="tablist" aria-label="Form facets">
+          {/* Catalog-driven: every species[].forms pill, including count 0. Not result-driven. */}
+          <div className="facet-bar" role="tablist" aria-label="Form facets">
+            <FormPill
+              label="All forms"
+              count={facets.all}
+              selected={facet === 'all'}
+              onSelect={() => setFacet('all')}
+            />
+            {facets.forms.map((form) => (
               <FormPill
-                label="All forms"
-                count={result.prints.length}
-                selected={facet === 'all'}
-                onSelect={() => setFacet('all')}
+                key={form.id}
+                label={form.label}
+                count={form.count}
+                selected={facet === form.id}
+                onSelect={() => setFacet(form.id)}
               />
-              {facets.tagged.length > 0 && facets.base > 0 && (
-                <FormPill
-                  label="Base"
-                  count={facets.base}
-                  selected={facet === 'base'}
-                  onSelect={() => setFacet('base')}
-                />
-              )}
-              {facets.tagged.map(({ id, count }) => (
-                <FormPill
-                  key={id}
-                  label={formatFormFilterLabel(id)}
-                  count={count}
-                  selected={facet === id}
-                  onSelect={() => setFacet(id)}
-                />
-              ))}
-            </div>
-          )}
+            ))}
+          </div>
 
           {loading && <p className="status">Fetching illustration prints…</p>}
 
@@ -123,12 +113,12 @@ export default function App() {
               speciesName={
                 facet === 'all'
                   ? species.name
-                  : `${species.name} (${formatFormFilterLabel(facet)})`
+                  : `${species.name} (${formatFormFilterLabel(facet, species.n)})`
               }
             />
           )}
 
-          {!loading && visible.length > 0 && <PrintGrid cards={visible} />}
+          {!loading && visible.length > 0 && <PrintGrid cards={visible} dex={species.n} />}
         </section>
       )}
 

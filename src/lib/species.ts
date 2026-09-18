@@ -1,15 +1,18 @@
 import {
-  FORM_FACETS,
-  type FormFacetId,
   NAME_STRIP_PREFIXES,
   NAME_STRIP_SUFFIXES,
   OWNER_POSSESSIVE_PATTERN,
 } from '../config/art-forward-taxonomy';
+import {
+  assignRealForm,
+  formsForSpecies,
+  labelForForm,
+  type CatalogForm,
+  type FormCard,
+} from '../config/real-forms';
+import { getSpeciesByDex } from './pokedex';
 
-export type { FormFacetId };
-
-/** All-forms / Base / a tagged form facet. */
-export type FormFilter = FormFacetId | 'all' | 'base';
+export type FormFilter = string;
 
 const OWNER_RE = new RegExp(OWNER_POSSESSIVE_PATTERN, 'i');
 
@@ -55,73 +58,47 @@ export function foldName(value: string): string {
     .trim();
 }
 
-export function cardFormFacets(card: {
-  name?: string;
-  subtypes?: string[];
-}): FormFacetId[] {
-  const name = card.name ?? '';
-  const subtypes = card.subtypes ?? [];
-  const hits: FormFacetId[] = [];
-
-  for (const facet of FORM_FACETS) {
-    const { namePrefix, nameSuffix, subtypes: subMatch } = facet.match;
-    const prefixHit = namePrefix?.some((p) => name.startsWith(p)) ?? false;
-    const suffixHit = nameSuffix?.some((s) => name.endsWith(s)) ?? false;
-    const subtypeHit = subMatch?.some((s) => subtypes.includes(s)) ?? false;
-    if (prefixHit || suffixHit || subtypeHit) hits.push(facet.id);
-  }
-
-  return hits;
+export function speciesNameForDex(dex: number): string {
+  return getSpeciesByDex(dex)?.name ?? `Dex ${dex}`;
 }
 
-/** True when the print has no regional / form facet (owner + combat tokens still count as Base). */
-export function isBaseFormCard(card: { name?: string; subtypes?: string[] }): boolean {
-  return cardFormFacets(card).length === 0;
+export function catalogForDex(dex: number): CatalogForm[] {
+  return formsForSpecies(dex, speciesNameForDex(dex));
 }
 
-export function countFormFilters(cards: { name?: string; subtypes?: string[] }[]): {
-  base: number;
-  tagged: { id: FormFacetId; count: number }[];
+export function assignCardForm(card: FormCard, dex: number): string {
+  return assignRealForm(card, dex, speciesNameForDex(dex));
+}
+
+/** @deprecated Prefer assignCardForm — kept for row chips of a known dex. */
+export function cardFormFacets(card: FormCard, dex: number): string[] {
+  const id = assignCardForm(card, dex);
+  return id === 'base' ? [] : [id];
+}
+
+export function isBaseFormCard(card: FormCard, dex: number): boolean {
+  return assignCardForm(card, dex) === 'base';
+}
+
+export type FormPillCount = CatalogForm & { count: number };
+
+/** Catalog-driven counts: every real form for the dex, including zeros. */
+export function countFormFilters(cards: FormCard[], dex: number): {
+  all: number;
+  forms: FormPillCount[];
 } {
-  const counts = new Map<FormFacetId, number>();
-  let base = 0;
+  const catalog = catalogForDex(dex);
+  const counts = new Map<string, number>(catalog.map((form) => [form.id, 0]));
   for (const card of cards) {
-    const tags = cardFormFacets(card);
-    if (tags.length === 0) base += 1;
-    for (const id of tags) counts.set(id, (counts.get(id) ?? 0) + 1);
+    const id = assignCardForm(card, dex);
+    counts.set(id, (counts.get(id) ?? 0) + 1);
   }
   return {
-    base,
-    tagged: [...counts.entries()]
-      .map(([id, count]) => ({ id, count }))
-      .sort((a, b) => b.count - a.count),
+    all: cards.length,
+    forms: catalog.map((form) => ({ ...form, count: counts.get(form.id) ?? 0 })),
   };
 }
 
-export function formatFormFilterLabel(id: FormFilter): string {
-  if (id === 'all') return 'All forms';
-  if (id === 'base') return 'Base';
-  return formatFacetLabel(id);
-}
-
-export function formatFacetLabel(id: FormFacetId): string {
-  const labels: Record<FormFacetId, string> = {
-    alolan: 'Alolan',
-    galarian: 'Galarian',
-    hisuian: 'Hisuian',
-    paldean: 'Paldean',
-    radiant: 'Radiant',
-    mega: 'Mega',
-    primal: 'Primal',
-    'origin-forme': 'Origin Forme',
-    black: 'Black',
-    white: 'White',
-    vmax: 'VMAX',
-    eternamax: 'Eternamax',
-    ancient: 'Ancient',
-    future: 'Future',
-    delta: 'δ',
-    break: 'BREAK',
-  };
-  return labels[id];
+export function formatFormFilterLabel(id: FormFilter, dex: number): string {
+  return labelForForm(dex, speciesNameForDex(dex), id);
 }
