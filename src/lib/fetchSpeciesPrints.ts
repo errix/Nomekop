@@ -19,7 +19,6 @@ const SELECT = [
   'set',
   'images',
   'tcgplayer',
-  'cardmarket',
 ].join(',');
 
 export type CardsSource = 'live' | 'mock';

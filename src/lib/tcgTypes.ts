@@ -53,7 +53,6 @@ export type TcgCard = {
 
 export type PrintPrices = {
   tcgplayerUsd?: { market?: number; mid?: number; url?: string; updatedAt?: string };
-  cardmarketEur?: { trend?: number; avg?: number; url?: string; updatedAt?: string };
 };
 
 const TCGPLAYER_VARIANT_ORDER = [
@@ -87,33 +86,17 @@ export function pickTcgplayerPrices(info: TcgPlayerInfo | undefined): PrintPrice
   };
 }
 
-export function pickCardmarketPrices(
-  info: CardmarketInfo | undefined,
-): PrintPrices['cardmarketEur'] {
-  if (!info?.prices) return undefined;
-  const trend = info.prices.trendPrice ?? undefined;
-  const avg = info.prices.averageSellPrice ?? info.prices.avg7 ?? undefined;
-  if (trend == null && avg == null) return undefined;
-  return {
-    trend: trend ?? undefined,
-    avg: avg ?? undefined,
-    url: info.url,
-    updatedAt: info.updatedAt,
-  };
-}
-
 export function pricesFor(card: TcgCard): PrintPrices {
   return {
     tcgplayerUsd: pickTcgplayerPrices(card.tcgplayer),
-    cardmarketEur: pickCardmarketPrices(card.cardmarket),
   };
 }
 
-export function formatMoney(value: number | undefined, currency: 'USD' | 'EUR'): string {
+export function formatMoney(value: number | undefined): string {
   if (value == null || Number.isNaN(value)) return '—';
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency,
+    currency: 'USD',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(value);

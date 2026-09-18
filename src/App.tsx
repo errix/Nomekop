@@ -70,7 +70,7 @@ export default function App() {
         <p className="lede">
           Type a Pokémon. We resolve it to a National Dex number so every form — Alolan,
           Galarian, costume, TAG TEAM — lands in the same bucket, then keep illustration-style
-          rarities with TCGPlayer and Cardmarket snapshots.
+          rarities with TCGPlayer USD snapshots.
         </p>
         <SearchBar value={query} onChange={setQuery} onSelect={(entry) => void lookup(entry)} />
       </header>
