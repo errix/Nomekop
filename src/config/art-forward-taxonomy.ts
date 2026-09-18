@@ -155,9 +155,10 @@ export const DO_NOT_USE_SUBTYPES_ALONE = [
 
 export const DEFERRED_PENDING_ERIC = [
   'Classic Collection',
-  'Promo alt arts',
   'Treat all Rare Holo V/VMAX/VSTAR as chase',
   'MEGA_ATTACK_RARE / Futuristic Rare / Black White Rare after live sample',
+  'XY/BW Black Star special arts (not audited in specialArtPromo seed v1)',
+  'Remaining SVP product foils vs UPC IR/SIR (see seed meta.gaps)',
 ] as const;
 
 export const TAXONOMY = {
@@ -186,6 +187,10 @@ export const TAXONOMY = {
       doNotUseSubtypesAlone: DO_NOT_USE_SUBTYPES_ALONE,
     },
     deferredPendingEric: DEFERRED_PENDING_ERIC,
+    specialArtPromo: {
+      match: 'card.id ∈ special-art-promos-seed-v1.json ids OR existing rarity/gallery net',
+      notAllPromos: true,
+    },
   },
 } as const;
 

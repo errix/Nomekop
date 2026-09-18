@@ -61,9 +61,11 @@ Gallery `set.id`s: `swsh9tg`, `swsh10tg`, `swsh11tg`, `swsh12tg`, `swsh12pt5gg`,
 
 Trainer SIRs and Trainer/Galarian Gallery cards are included when they match those flags. Energy is always excluded.
 
-**Not included:** Common, Uncommon, Rare, Rare Holo, Double Rare (standard Scarlet & Violet ex), bare Promo. Subtypes alone (Tera, Ancient, Future, ex, V, VMAX, VSTAR, …) are not treated as full-art signals.
+**Not included:** Common, Uncommon, Rare, Rare Holo, Double Rare (standard Scarlet & Violet ex), bare Promo that is not on the special-art allowlist. Subtypes alone (Tera, Ancient, Future, ex, V, VMAX, VSTAR, …) are not treated as full-art signals. Regular set VSTAR 018 stays out; Rare Rainbow still comes in via the rarity allowlist.
 
-**Deferred (not baked in):** Classic Collection; promo alt arts; treating every Rare Holo V/VMAX/VSTAR as chase; MEGA_ATTACK_RARE / Futuristic Rare / Black White Rare until live-sampled.
+**Special-art Black Star promos:** a Promo is included only when `card.id` is in [`src/data/special-art-promos-seed-v1.json`](src/data/special-art-promos-seed-v1.json) (curated **43** ids, including Charizard UPC `swshp-SWSH260` / `SWSH261` / `SWSH262`) **or** the existing rarity/gallery net already passes. This is not “all Promos.” Seed v1 `meta.gaps`: metal Arceus UPC cards, some Celebrations/Champions Path promos, most SVP product foils, and XY/BW special arts are left out for later review.
+
+**Deferred (not baked in):** Classic Collection; treating every Rare Holo V/VMAX/VSTAR as chase; MEGA_ATTACK_RARE / Futuristic Rare / Black White Rare until live-sampled.
 
 When a species has no matching prints, the UI says clearly that **no full-art / illustration prints were found yet**.
 
