@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nomekop://config/art-forward-taxonomy-v1",
+  "title": "NomekopArtForwardTaxonomy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "species", "artForward"],
+  "properties": {
+    "version": { "type": "integer", "const": 1 },
+    "species": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["joinKey", "requireSupertype", "nameNormalize"],
+      "properties": {
+        "joinKey": {
+          "type": "string",
+          "const": "nationalPokedexNumbers",
+          "description": "Bucket all cards whose nationalPokedexNumbers contains the query dex."
+        },
+        "requireSupertype": {
+          "type": "string",
+          "const": "Pokémon"
+        },
+        "nameNormalize": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["stripPrefixes", "stripSuffixes", "formFacets"],
+          "properties": {
+            "stripPrefixes": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": [
+                "Alolan ", "Galarian ", "Hisuian ", "Paldean ",
+                "Radiant ", "Primal ", "Origin Forme ",
+                "Black ", "White ", "Mega ", "M "
+              ]
+            },
+            "stripSuffixes": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": [
+                "-EX", "-GX", " V", " VMAX", " VSTAR", " ex",
+                " BREAK", " δ",
+                " Normal Forme", " Attack Forme", " Defense Forme", " Speed Forme"
+              ]
+            },
+            "ownerPossessivePattern": {
+              "type": "string",
+              "description": "Regex hint for Team Rocket's / Giovanni's / Rocket's style names",
+              "default": "^.+['’]s\\s+"
+            },
+            "formFacets": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "match"],
+                "additionalProperties": false,
+                "properties": {
+                  "id": { "type": "string" },
+                  "match": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "namePrefix": { "type": "array", "items": { "type": "string" } },
+                      "nameSuffix": { "type": "array", "items": { "type": "string" } },
+                      "subtypes": { "type": "array", "items": { "type": "string" } }
+                    }
+                  }
+                }
+              },
+              "default": [
+                { "id": "alolan", "match": { "namePrefix": ["Alolan "] } },
+                { "id": "galarian", "match": { "namePrefix": ["Galarian "] } },
+                { "id": "hisuian", "match": { "namePrefix": ["Hisuian "] } },
+                { "id": "paldean", "match": { "namePrefix": ["Paldean "] } },
+                { "id": "radiant", "match": { "namePrefix": ["Radiant "], "subtypes": ["Radiant"] } },
+                { "id": "mega", "match": { "namePrefix": ["M ", "Mega "], "subtypes": ["MEGA"] } },
+                { "id": "primal", "match": { "namePrefix": ["Primal "] } },
+                { "id": "origin-forme", "match": { "namePrefix": ["Origin Forme "] } },
+                { "id": "black", "match": { "namePrefix": ["Black "] } },
+                { "id": "white", "match": { "namePrefix": ["White "] } },
+                { "id": "vmax", "match": { "nameSuffix": [" VMAX"], "subtypes": ["VMAX"] } },
+                { "id": "eternamax", "match": { "subtypes": ["Eternamax"] } },
+                { "id": "ancient", "match": { "subtypes": ["Ancient"] } },
+                { "id": "future", "match": { "subtypes": ["Future"] } },
+                { "id": "delta", "match": { "nameSuffix": [" δ"] } },
+                { "id": "break", "match": { "nameSuffix": [" BREAK"], "subtypes": ["BREAK"] } }
+              ]
+            },
+            "notes": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": [
+                "Therian/Incarnate not encoded in English name — dex-only bucket",
+                "Gigantamax not in name — VMAX/Eternamax stand-in",
+                "Costume renames (e.g. Detective Pikachu) — prefer dex over fuzzy name",
+                "TAG TEAM: multiple nationalPokedexNumbers"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "artForward": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["raritiesInclude", "gallerySetIds", "exclude"],
+      "properties": {
+        "raritiesInclude": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [
+            "Illustration Rare",
+            "Special Illustration Rare",
+            "Amazing Rare",
+            "Radiant Rare",
+            "Rare Ultra",
+            "Ultra Rare",
+            "Rare Rainbow",
+            "Rare Secret",
+            "Trainer Gallery Rare Holo",
+            "Shiny Rare",
+            "Shiny Ultra Rare",
+            "Rare Shiny",
+            "Rare Shiny GX",
+            "Mega Hyper Rare"
+          ]
+        },
+        "hyperRarePokémonOnly": {
+          "type": "boolean",
+          "const": true,
+          "description": "Include rarity Hyper Rare only when supertype is Pokémon"
+        },
+        "gallerySetIds": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [
+            "swsh9tg",
+            "swsh10tg",
+            "swsh11tg",
+            "swsh12tg",
+            "swsh12pt5gg"
+          ],
+          "description": "TG + Galarian Gallery; GG shares Trainer Gallery Rare Holo — distinguish by set.id / GG vs TG number prefix"
+        },
+        "gallerySetIdPatterns": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["*tg", "*gg"],
+          "description": "Future gallery sets; glob against set.id"
+        },
+        "includeTrainerSir": {
+          "type": "boolean",
+          "default": true,
+          "description": "Special Illustration Rare Trainers (character art)"
+        },
+        "includeTrainerGalleryCards": {
+          "type": "boolean",
+          "default": true
+        },
+        "exclude": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["supertypes", "raritiesUnlessGallery"],
+          "properties": {
+            "supertypes": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["Energy"]
+            },
+            "raritiesUnlessGallery": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": [
+                "Common", "Uncommon", "Rare", "Rare Holo",
+                "Double Rare", "Promo"
+              ],
+              "description": "Double Rare = standard SV ex, not illustration chase"
+            },
+            "doNotUseSubtypesAlone": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": [
+                "Tera", "Single Strike", "Rapid Strike", "Fusion Strike",
+                "Ancient", "Future", "ex", "V", "VMAX", "VSTAR"
+              ]
+            }
+          }
+        },
+        "deferredPendingEric": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [
+            "Classic Collection",
+            "Promo alt arts",
+            "Treat all Rare Holo V/VMAX/VSTAR as chase",
+            "MEGA_ATTACK_RARE / Futuristic Rare / Black White Rare after live sample"
+          ]
+        }
+      }
+    }
+  }
+}
