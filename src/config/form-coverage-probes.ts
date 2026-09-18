@@ -87,7 +87,13 @@ export const FORM_COVERAGE_PROBES: readonly FormCoverageProbe[] = [
     name: 'Raichu',
     requiredLabels: ['Base', 'Alolan', 'Mega Raichu X', 'Mega Raichu Y'],
     exactLabels: ['Base', 'Alolan', 'Mega Raichu X', 'Mega Raichu Y'],
-    notes: 'Z-A Mega Dimension; Mega X/Y stay visible at count 0.',
+    notes: 'Z-A Mega Dimension; Mega X/Y stay visible at count 0. Do not strip.',
+    signals: [
+      { name: 'Raichu', formId: 'base' },
+      { name: 'Alolan Raichu', formId: 'alolan' },
+      { name: 'Mega Raichu X ex', subtypes: ['MEGA', 'ex'], formId: 'mega-x' },
+      { name: 'Mega Raichu Y ex', subtypes: ['MEGA', 'ex'], formId: 'mega-y' },
+    ],
   },
   {
     dex: 38,
