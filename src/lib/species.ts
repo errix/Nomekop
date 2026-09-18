@@ -9,12 +9,10 @@ import {
   labelForForm,
   type CatalogForm,
   type FormCard,
-  type RealFormId,
 } from '../config/real-forms';
 import { getSpeciesByDex } from './pokedex';
 
-export type { RealFormId };
-export type FormFilter = RealFormId | 'all';
+export type FormFilter = string;
 
 const OWNER_RE = new RegExp(OWNER_POSSESSIVE_PATTERN, 'i');
 
@@ -68,12 +66,12 @@ export function catalogForDex(dex: number): CatalogForm[] {
   return formsForSpecies(dex, speciesNameForDex(dex));
 }
 
-export function assignCardForm(card: FormCard, dex: number): RealFormId {
+export function assignCardForm(card: FormCard, dex: number): string {
   return assignRealForm(card, dex, speciesNameForDex(dex));
 }
 
 /** @deprecated Prefer assignCardForm — kept for row chips of a known dex. */
-export function cardFormFacets(card: FormCard, dex: number): RealFormId[] {
+export function cardFormFacets(card: FormCard, dex: number): string[] {
   const id = assignCardForm(card, dex);
   return id === 'base' ? [] : [id];
 }
@@ -90,7 +88,7 @@ export function countFormFilters(cards: FormCard[], dex: number): {
   forms: FormPillCount[];
 } {
   const catalog = catalogForDex(dex);
-  const counts = new Map<RealFormId, number>(catalog.map((form) => [form.id, 0]));
+  const counts = new Map<string, number>(catalog.map((form) => [form.id, 0]));
   for (const card of cards) {
     const id = assignCardForm(card, dex);
     counts.set(id, (counts.get(id) ?? 0) + 1);

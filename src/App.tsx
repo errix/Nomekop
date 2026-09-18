@@ -87,6 +87,7 @@ export default function App() {
           {result?.warning && <p className="banner">{result.warning}</p>}
           {error && <p className="banner error">{error}</p>}
 
+          {/* Catalog-driven: every species[].forms pill, including count 0. Not result-driven. */}
           <div className="facet-bar" role="tablist" aria-label="Form facets">
             <FormPill
               label="All forms"

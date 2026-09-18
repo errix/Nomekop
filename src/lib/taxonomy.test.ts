@@ -15,7 +15,14 @@ import {
   isBaseFormCard,
   normalizeSpeciesToken,
 } from '../lib/species';
-import { assignRealForm, formsForSpecies } from '../config/real-forms';
+import {
+  CATALOG_RULES,
+  CATALOG_SPECIES_COUNT,
+  CATALOG_VERSION,
+  assignRealForm,
+  formsForSpecies,
+} from '../config/real-forms';
+import catalogJson from '../data/species-forms-catalog-v1.json';
 import { pickCardmarketPrices, pickTcgplayerPrices } from '../lib/tcgTypes';
 import type { TcgCard } from '../lib/tcgTypes';
 
@@ -319,7 +326,54 @@ describe('art-forward filter', () => {
     expect(catalogForDex(13).map((f) => f.id)).toEqual(['base']);
     const counts = countFormFilters([], 13);
     expect(counts.all).toBe(0);
-    expect(counts.forms).toEqual([{ id: 'base', label: 'Base', count: 0 }]);
+    expect(counts.forms.map((f) => ({ id: f.id, label: f.label, count: f.count }))).toEqual([
+      { id: 'base', label: 'Base', count: 0 },
+    ]);
+  });
+
+  it('loads exhaustive catalog v1 (1025 species, no Radiant, zeros stay visible)', () => {
+    expect(CATALOG_VERSION).toBe(1);
+    expect(CATALOG_SPECIES_COUNT).toBe(1025);
+    expect(CATALOG_RULES).toEqual({
+      catalogDriven: true,
+      radiantIsForm: false,
+      zeroCountPillsVisible: true,
+    });
+    expect(catalogJson.species.map((row) => row.dex)).toEqual(
+      Array.from({ length: 1025 }, (_, i) => i + 1),
+    );
+    expect(catalogJson.species.every((row) => row.forms.some((form) => form.label === 'Base'))).toBe(
+      true,
+    );
+    expect(
+      catalogJson.species.some((row) => row.forms.some((form) => form.label === 'Radiant')),
+    ).toBe(false);
+  });
+
+  it('probe list stays catalog-driven even with an empty result set', () => {
+    const probes: { dex: number; name: string; labels: string[] }[] = [
+      { dex: 6, name: 'Charizard', labels: ['Base', 'Mega Charizard X', 'Mega Charizard Y', 'Gigantamax'] },
+      { dex: 13, name: 'Weedle', labels: ['Base'] },
+      { dex: 25, name: 'Pikachu', labels: ['Base', 'Gigantamax'] },
+      { dex: 26, name: 'Raichu', labels: ['Base', 'Alolan', 'Mega Raichu X', 'Mega Raichu Y'] },
+      { dex: 52, name: 'Meowth', labels: ['Base', 'Alolan', 'Galarian', 'Gigantamax'] },
+      { dex: 150, name: 'Mewtwo', labels: ['Base', 'Mega Mewtwo X', 'Mega Mewtwo Y'] },
+      { dex: 359, name: 'Absol', labels: ['Base', 'Mega', 'Mega Z'] },
+      { dex: 386, name: 'Deoxys', labels: ['Base', 'Attack Forme', 'Defense Forme', 'Speed Forme'] },
+      { dex: 445, name: 'Garchomp', labels: ['Base', 'Mega', 'Mega Z'] },
+      { dex: 448, name: 'Lucario', labels: ['Base', 'Mega', 'Mega Z'] },
+      { dex: 641, name: 'Tornadus', labels: ['Base', 'Therian'] },
+      { dex: 890, name: 'Eternatus', labels: ['Base', 'Eternamax'] },
+      { dex: 892, name: 'Urshifu', labels: ['Base', 'Rapid Strike', 'Gigantamax'] },
+    ];
+
+    for (const probe of probes) {
+      expect(formsForSpecies(probe.dex, probe.name).map((form) => form.label)).toEqual(probe.labels);
+      const empty = countFormFilters([], probe.dex);
+      expect(empty.all).toBe(0);
+      expect(empty.forms.map((form) => form.label)).toEqual(probe.labels);
+      expect(empty.forms.every((form) => form.count === 0)).toBe(true);
+    }
   });
 
   it('does not treat Detective Pikachu play-rarity as art-forward', () => {
