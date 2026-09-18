@@ -194,9 +194,35 @@ a {
 }
 
 .facet-bar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   background: transparent;
   white-space: nowrap;
-  padding: 0 0.85rem;
+  padding: 0 0.4rem 0 0.8rem;
+}
+
+.facet-label {
+  font-weight: 600;
+}
+
+.facet-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.55rem;
+  height: 1.55rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  background: rgba(246, 240, 230, 0.12);
+  color: var(--ink);
+}
+
+.facet-bar button.is-on .facet-count {
+  background: rgba(36, 24, 11, 0.2);
+  color: #24180b;
 }
 
 .grid {

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { EmptyState } from './components/EmptyState';
+import { FormPill } from './components/FormPill';
 import { PrintGrid } from './components/PrintGrid';
 import { SearchBar } from './components/SearchBar';
 import { loadSpeciesPrints } from './lib/client';
@@ -94,33 +95,30 @@ export default function App() {
           {result?.warning && <p className="banner">{result.warning}</p>}
           {error && <p className="banner error">{error}</p>}
 
-          {showFormPills && (
+          {showFormPills && result && (
             <div className="facet-bar" role="tablist" aria-label="Form facets">
-              <button
-                type="button"
-                className={facet === 'all' ? 'is-on' : undefined}
-                onClick={() => setFacet('all')}
-              >
-                All forms
-              </button>
+              <FormPill
+                label="All forms"
+                count={result.prints.length}
+                selected={facet === 'all'}
+                onSelect={() => setFacet('all')}
+              />
               {facets.base > 0 && (
-                <button
-                  type="button"
-                  className={facet === 'base' ? 'is-on' : undefined}
-                  onClick={() => setFacet('base')}
-                >
-                  Base {facets.base}
-                </button>
+                <FormPill
+                  label="Base"
+                  count={facets.base}
+                  selected={facet === 'base'}
+                  onSelect={() => setFacet('base')}
+                />
               )}
               {facets.tagged.map(({ id, count }) => (
-                <button
+                <FormPill
                   key={id}
-                  type="button"
-                  className={facet === id ? 'is-on' : undefined}
-                  onClick={() => setFacet(id)}
-                >
-                  {formatFormFilterLabel(id)} {count}
-                </button>
+                  label={formatFormFilterLabel(id)}
+                  count={count}
+                  selected={facet === id}
+                  onSelect={() => setFacet(id)}
+                />
               ))}
             </div>
           )}
