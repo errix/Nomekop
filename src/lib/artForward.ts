@@ -92,7 +92,12 @@ export function luceneArtForwardClause(): string {
   return `(${rarityClause})`;
 }
 
-/** Species bucket query: dex join key + Pokémon supertype + art-forward clause. */
+/** Logical species bucket (docs/tests). Live fetches use the dex join key only. */
 export function luceneSpeciesQuery(dex: number): string {
   return `nationalPokedexNumbers:${dex} supertype:Pokémon ${luceneArtForwardClause()}`;
+}
+
+/** Query actually sent to pokemontcg.io — dex join key, no name wildcard. */
+export function luceneDexQuery(dex: number): string {
+  return `nationalPokedexNumbers:${dex}`;
 }

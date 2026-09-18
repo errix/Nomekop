@@ -1,10 +1,11 @@
 import { MOCK_CARDS } from '../data/mockCards';
-import { filterSpeciesArtForward, luceneSpeciesQuery } from './artForward';
+import { filterSpeciesArtForward, luceneDexQuery } from './artForward';
 import { getSpeciesByDex } from './pokedex';
 import type { TcgCard } from './tcgTypes';
 
 const API_BASE = 'https://api.pokemontcg.io/v2';
 const PAGE_SIZE = 250;
+const USER_AGENT = 'Nomekop/0.1 (+https://github.com/errix/Nomekop)';
 const SELECT = [
   'id',
   'name',
@@ -52,14 +53,23 @@ async function fetchPage(
   url.searchParams.set('orderBy', 'set.releaseDate,number');
   url.searchParams.set('select', SELECT);
 
-  const headers: Record<string, string> = { Accept: 'application/json' };
+  const headers: Record<string, string> = {
+    Accept: 'application/json',
+    'User-Agent': USER_AGENT,
+  };
   if (apiKey) headers['X-Api-Key'] = apiKey;
 
-  const response = await fetch(url, { headers });
-  if (!response.ok) {
-    throw new Error(`pokemontcg.io ${response.status} ${response.statusText}`);
+  let lastError = 'unknown error';
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    const response = await fetch(url, { headers });
+    if (response.ok) return (await response.json()) as ApiPage;
+    lastError = `pokemontcg.io ${response.status} ${response.statusText}`;
+    if (![429, 500, 502, 503].includes(response.status) || attempt === 3) {
+      throw new Error(lastError);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 400 * 2 ** attempt));
   }
-  return (await response.json()) as ApiPage;
+  throw new Error(lastError);
 }
 
 function mockResult(dex: number, reason: string): SpeciesPrintsResult {
@@ -69,7 +79,7 @@ function mockResult(dex: number, reason: string): SpeciesPrintsResult {
     source: 'mock',
     dex,
     speciesName: species?.name ?? `Dex ${dex}`,
-    query: luceneSpeciesQuery(dex),
+    query: luceneDexQuery(dex),
     keyUsed: false,
     totalFromApi: prints.length,
     prints,
@@ -92,7 +102,7 @@ export async function fetchSpeciesPrints(
 ): Promise<SpeciesPrintsResult> {
   const species = getSpeciesByDex(dex);
   const speciesName = species?.name ?? `Dex ${dex}`;
-  const query = luceneSpeciesQuery(dex);
+  const query = luceneDexQuery(dex);
 
   try {
     const first = await fetchPage(query, 1, apiKey);

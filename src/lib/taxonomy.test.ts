@@ -5,6 +5,7 @@ import {
   belongsToDex,
   filterSpeciesArtForward,
   isArtForwardCard,
+  luceneDexQuery,
   luceneSpeciesQuery,
 } from '../lib/artForward';
 import { resolveSpecies, suggestSpecies } from '../lib/pokedex';
@@ -173,6 +174,33 @@ describe('art-forward filter', () => {
     ).toBe(false);
   });
 
+  it('does not treat all Rare Holo V as chase, but keeps gallery-set prints', () => {
+    expect(
+      isArtForwardCard(
+        card({
+          id: 'v',
+          name: 'Pikachu V',
+          supertype: 'Pokémon',
+          rarity: 'Rare Holo V',
+          set: { id: 'swsh4', name: 'Vivid Voltage' },
+          nationalPokedexNumbers: [25],
+        }),
+      ),
+    ).toBe(false);
+    expect(
+      isArtForwardCard(
+        card({
+          id: 'vtg',
+          name: 'Pikachu V',
+          supertype: 'Pokémon',
+          rarity: 'Rare Holo V',
+          set: { id: 'swsh11tg', name: 'Lost Origin Trainer Gallery' },
+          nationalPokedexNumbers: [25],
+        }),
+      ),
+    ).toBe(true);
+  });
+
   it('buckets Meowth forms together by dex and keeps form facets on the row', () => {
     const prints = filterSpeciesArtForward(MOCK_CARDS, 52);
     const names = prints.map((c) => c.name).sort();
@@ -195,6 +223,7 @@ describe('art-forward filter', () => {
     expect(q).toContain('nationalPokedexNumbers:52');
     expect(q).toContain('supertype:Pokémon');
     expect(q).not.toContain('name:meowth');
+    expect(luceneDexQuery(52)).toBe('nationalPokedexNumbers:52');
   });
 });
 

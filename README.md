@@ -33,6 +33,8 @@ POKEMONTCG_API_KEY=your_key_here
 
 The browser never sees the key. Vite (dev/preview), Vercel (`/api/cards`), and Netlify (`/.netlify/functions/cards`) attach it as `X-Api-Key` when calling pokemontcg.io.
 
+Lookups send `q=nationalPokedexNumbers:{dex}` (the species join key — not a name wildcard). Art-forward rarities are applied in our taxonomy filter. (Quoted multi-rarity Lucene ORs currently 500 on pokemontcg.io.)
+
 A key is optional: the public API works without one at a much lower rate limit. If the live request fails (rate limit, network), the app falls back to a **small sample dataset** so the UI and art-forward filter can still be reviewed. The page banner says when sample data is in use.
 
 ## What is included (slice 1)
