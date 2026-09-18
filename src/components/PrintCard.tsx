@@ -1,5 +1,8 @@
-import type { ReactNode } from 'react';
+import { useState } from 'react';
 import { formatMoney, pricesFor, type TcgCard } from '../lib/tcgTypes';
+import { loadSoldRange } from '../lib/solds';
+import { SoldDetailSheet } from './SoldDetailSheet';
+import { SoldRangeBar } from './SoldRangeBar';
 
 type Props = {
   card: TcgCard;
@@ -7,7 +10,10 @@ type Props = {
 };
 
 export function PrintCard({ card, formLabel }: Props) {
+  const [detailOpen, setDetailOpen] = useState(false);
   const prices = pricesFor(card);
+  const usd = prices.tcgplayerUsd;
+  const solds = loadSoldRange(card, 'raw');
   const image = card.images?.large ?? card.images?.small;
   const setLabel = [card.set?.name, card.number].filter(Boolean).join(' · ');
 
@@ -23,7 +29,7 @@ export function PrintCard({ card, formLabel }: Props) {
         {image ? (
           <img src={image} alt="" loading="lazy" width={245} height={342} />
         ) : (
-          <div className="print-missing">No scan</div>
+          <div className="print-missing">card art</div>
         )}
       </a>
       <div className="print-body">
@@ -35,38 +41,32 @@ export function PrintCard({ card, formLabel }: Props) {
             <li>{formLabel}</li>
           </ul>
         )}
-        <dl className="prices">
-          <div>
-            <dt>TCGPlayer USD</dt>
-            <dd>
-              {prices.tcgplayerUsd ? (
-                <PriceLink href={prices.tcgplayerUsd.url}>
-                  {formatMoney(prices.tcgplayerUsd.market)}
-                  <span className="muted"> market</span>
-                  {prices.tcgplayerUsd.mid != null && (
-                    <>
-                      <br />
-                      {formatMoney(prices.tcgplayerUsd.mid)}
-                      <span className="muted"> mid</span>
-                    </>
-                  )}
-                </PriceLink>
-              ) : (
-                '—'
-              )}
-            </dd>
+        <div className="price-row">
+          <div className="price-block">
+            <p className="price-label">Market</p>
+            <p className="price-value">{formatMoney(usd?.market)}</p>
           </div>
-        </dl>
+          <div className="price-block">
+            <p className="price-label">Mid</p>
+            <p className="price-value">{formatMoney(usd?.mid)}</p>
+          </div>
+        </div>
+        {usd?.url ? (
+          <a className="price-source" href={usd.url} target="_blank" rel="noreferrer">
+            TCGPlayer USD
+          </a>
+        ) : (
+          <p className="price-source">TCGPlayer USD</p>
+        )}
+        {solds && (
+          <SoldRangeBar
+            range={solds}
+            market={usd?.market}
+            onOpenDetail={() => setDetailOpen(true)}
+          />
+        )}
       </div>
+      <SoldDetailSheet card={card} open={detailOpen} onClose={() => setDetailOpen(false)} />
     </article>
-  );
-}
-
-function PriceLink({ href, children }: { href?: string; children: ReactNode }) {
-  if (!href) return <span>{children}</span>;
-  return (
-    <a href={href} target="_blank" rel="noreferrer">
-      {children}
-    </a>
   );
 }
