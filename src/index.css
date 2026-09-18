@@ -399,6 +399,47 @@ a {
   opacity: 0.45;
 }
 
+.venue-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.range > .venue-row:first-child {
+  margin-top: 0;
+}
+
+.venue-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid #2f2f35;
+  background: #1c1c20;
+  color: #f4f4f5;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+}
+
+.venue-btn.venue-tcg {
+  border-color: #3a4550;
+  background: #1a222a;
+}
+
+.venue-btn.venue-ebay {
+  border-color: #3a3530;
+  background: #221e1a;
+}
+
+.venue-btn.is-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 .range-badge {
   display: inline-block;
   margin-top: 10px;
