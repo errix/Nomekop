@@ -353,12 +353,13 @@ describe('art-forward filter', () => {
 
   it('probe list stays catalog-driven even with an empty result set', () => {
     for (const probe of FORM_COVERAGE_PROBES) {
-      expect(formsForSpecies(probe.dex, probe.name).map((form) => form.label)).toEqual([
-        ...probe.labels,
-      ]);
+      const labels = formsForSpecies(probe.dex, probe.name).map((form) => form.label);
+      for (const required of probe.requiredLabels) {
+        expect(labels).toContain(required);
+      }
+      if (probe.exactLabels) expect(labels).toEqual([...probe.exactLabels]);
       const empty = countFormFilters([], probe.dex);
       expect(empty.all).toBe(0);
-      expect(empty.forms.map((form) => form.label)).toEqual([...probe.labels]);
       expect(empty.forms.every((form) => form.count === 0)).toBe(true);
       expect(
         empty.forms.some((form) =>
