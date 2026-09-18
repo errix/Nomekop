@@ -17,6 +17,10 @@ import {
 } from '../lib/species';
 import { FORM_COVERAGE_PROBES, NEVER_FORM_PILL_LABELS } from '../config/form-coverage-probes';
 import {
+  SPECIAL_ART_PROMO_SEED,
+  isSpecialArtPromoId,
+} from '../config/special-art-promos';
+import {
   CATALOG_RULES,
   CATALOG_SPECIES_COUNT,
   CATALOG_VERSION,
@@ -153,6 +157,69 @@ describe('art-forward filter', () => {
         card({ id: 'p', name: 'Pikachu', supertype: 'Pokémon', rarity: 'Promo' }),
       ),
     ).toBe(false);
+  });
+
+  it('includes specialArtPromo allowlist ids (SWSH260/262) without opening all Promos', () => {
+    expect(SPECIAL_ART_PROMO_SEED.ids).toHaveLength(43);
+    expect(SPECIAL_ART_PROMO_SEED.meta.count).toBe(43);
+    expect(SPECIAL_ART_PROMO_SEED.ids).toEqual(expect.arrayContaining(['swshp-SWSH261']));
+    expect(SPECIAL_ART_PROMO_SEED.mustInclude).toEqual(['swshp-SWSH260', 'swshp-SWSH262']);
+    expect(SPECIAL_ART_PROMO_SEED.mustInclude.every((id) => isSpecialArtPromoId(id))).toBe(true);
+
+    const swsh260 = card({
+      id: 'swshp-SWSH260',
+      name: 'Charizard V',
+      supertype: 'Pokémon',
+      rarity: 'Promo',
+      subtypes: ['V'],
+      nationalPokedexNumbers: [6],
+    });
+    const swsh262 = card({
+      id: 'swshp-SWSH262',
+      name: 'Charizard VSTAR',
+      supertype: 'Pokémon',
+      rarity: 'Promo',
+      subtypes: ['VSTAR'],
+      nationalPokedexNumbers: [6],
+    });
+    const stampPromo = card({
+      id: 'swshp-SWSH050',
+      name: 'Charizard V',
+      supertype: 'Pokémon',
+      rarity: 'Promo',
+      subtypes: ['V'],
+      nationalPokedexNumbers: [6],
+    });
+    const vstar018 = card({
+      id: 'swsh9-018',
+      name: 'Charizard VSTAR',
+      supertype: 'Pokémon',
+      rarity: 'Rare Holo VSTAR',
+      subtypes: ['VSTAR'],
+      nationalPokedexNumbers: [6],
+    });
+    const rainbow = card({
+      id: 'swsh3-178',
+      name: 'Charizard VMAX',
+      supertype: 'Pokémon',
+      rarity: 'Rare Rainbow',
+      subtypes: ['VMAX'],
+      nationalPokedexNumbers: [6],
+    });
+
+    expect(isArtForwardCard(swsh260)).toBe(true);
+    expect(isArtForwardCard(swsh262)).toBe(true);
+    expect(isArtForwardCard(stampPromo)).toBe(false);
+    expect(isArtForwardCard(vstar018)).toBe(false);
+    expect(isArtForwardCard(rainbow)).toBe(true);
+
+    const charizard = filterSpeciesArtForward(MOCK_CARDS, 6).map((c) => c.id);
+    expect(charizard).toContain('swshp-SWSH260');
+    expect(charizard).toContain('swshp-SWSH261');
+    expect(charizard).toContain('swshp-SWSH262');
+    expect(charizard).not.toContain('swshp-SWSH050');
+    expect(charizard).not.toContain('swsh9-018');
+    expect(charizard).toContain('swsh3-178');
   });
 
   it('includes gallery sets and trainer SIRs per flags, without using subtypes alone', () => {

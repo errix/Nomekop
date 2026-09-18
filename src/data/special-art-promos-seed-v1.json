@@ -1,0 +1,549 @@
+{
+  "version": 1,
+  "purpose": "specialArtPromo allowlist — illustration-forward promos only",
+  "rules": {
+    "match": "card.id is in ids OR existing rarity/gallery net",
+    "notAllPromos": true
+  },
+  "mustInclude": [
+    "swshp-SWSH260",
+    "swshp-SWSH262"
+  ],
+  "ids": [
+    "swshp-SWSH260",
+    "swshp-SWSH261",
+    "swshp-SWSH262",
+    "swshp-SWSH253",
+    "swshp-SWSH254",
+    "swshp-SWSH255",
+    "swshp-SWSH256",
+    "swshp-SWSH297",
+    "swshp-SWSH298",
+    "swshp-SWSH248",
+    "swshp-SWSH249",
+    "swshp-SWSH213",
+    "swshp-SWSH214",
+    "swshp-SWSH291",
+    "swshp-SWSH179",
+    "swshp-SWSH180",
+    "swshp-SWSH181",
+    "swshp-SWSH182",
+    "swshp-SWSH183",
+    "swshp-SWSH184",
+    "swshp-SWSH194",
+    "swshp-SWSH195",
+    "swshp-SWSH196",
+    "swshp-SWSH197",
+    "swshp-SWSH263",
+    "swshp-SWSH264",
+    "swshp-SWSH265",
+    "swshp-SWSH266",
+    "swshp-SWSH267",
+    "swshp-SWSH268",
+    "swshp-SWSH235",
+    "swshp-SWSH236",
+    "swshp-SWSH285",
+    "swshp-SWSH286",
+    "swshp-SWSH292",
+    "swshp-SWSH293",
+    "swshp-SWSH074",
+    "swshp-SWSH075",
+    "swshp-SWSH177",
+    "svp-52",
+    "svp-53",
+    "smp-SM247",
+    "smp-SM248"
+  ],
+  "cards": [
+    {
+      "id": "swshp-SWSH260",
+      "name": "Charizard V",
+      "number": "SWSH260",
+      "setId": "swshp",
+      "dex": [
+        6
+      ],
+      "notes": "Charizard UPC etched special-art promo"
+    },
+    {
+      "id": "swshp-SWSH261",
+      "name": "Charizard VMAX",
+      "number": "SWSH261",
+      "setId": "swshp",
+      "dex": [
+        6
+      ],
+      "notes": "Charizard UPC etched special-art promo"
+    },
+    {
+      "id": "swshp-SWSH262",
+      "name": "Charizard VSTAR",
+      "number": "SWSH262",
+      "setId": "swshp",
+      "dex": [
+        6
+      ],
+      "notes": "Charizard UPC etched special-art promo"
+    },
+    {
+      "id": "swshp-SWSH253",
+      "name": "Origin Forme Palkia V",
+      "number": "SWSH253",
+      "setId": "swshp",
+      "dex": [
+        484
+      ],
+      "notes": "Origin Forme Palkia VSTAR Premium Collection etched foil"
+    },
+    {
+      "id": "swshp-SWSH254",
+      "name": "Origin Forme Palkia VSTAR",
+      "number": "SWSH254",
+      "setId": "swshp",
+      "dex": [
+        484
+      ],
+      "notes": "Origin Forme Palkia VSTAR Premium Collection etched alt-art VSTAR"
+    },
+    {
+      "id": "swshp-SWSH255",
+      "name": "Origin Forme Dialga V",
+      "number": "SWSH255",
+      "setId": "swshp",
+      "dex": [
+        483
+      ],
+      "notes": "Origin Forme Dialga VSTAR Premium Collection etched foil"
+    },
+    {
+      "id": "swshp-SWSH256",
+      "name": "Origin Forme Dialga VSTAR",
+      "number": "SWSH256",
+      "setId": "swshp",
+      "dex": [
+        483
+      ],
+      "notes": "Origin Forme Dialga VSTAR Premium Collection etched alt-art VSTAR"
+    },
+    {
+      "id": "swshp-SWSH297",
+      "name": "Hisuian Zoroark V",
+      "number": "SWSH297",
+      "setId": "swshp",
+      "dex": [
+        571
+      ],
+      "notes": "Hisuian Zoroark VSTAR Premium Collection etched foil"
+    },
+    {
+      "id": "swshp-SWSH298",
+      "name": "Hisuian Zoroark VSTAR",
+      "number": "SWSH298",
+      "setId": "swshp",
+      "dex": [
+        571
+      ],
+      "notes": "Hisuian Zoroark VSTAR Premium Collection alt-art VSTAR"
+    },
+    {
+      "id": "swshp-SWSH248",
+      "name": "Kleavor V",
+      "number": "SWSH248",
+      "setId": "swshp",
+      "dex": [
+        900
+      ],
+      "notes": "Kleavor VSTAR Premium Collection etched foil"
+    },
+    {
+      "id": "swshp-SWSH249",
+      "name": "Kleavor VSTAR",
+      "number": "SWSH249",
+      "setId": "swshp",
+      "dex": [
+        900
+      ],
+      "notes": "Kleavor VSTAR Premium Collection etched VSTAR"
+    },
+    {
+      "id": "swshp-SWSH213",
+      "name": "Lucario V",
+      "number": "SWSH213",
+      "setId": "swshp",
+      "dex": [
+        448
+      ],
+      "notes": "Lucario VSTAR Premium Collection etched foil"
+    },
+    {
+      "id": "swshp-SWSH214",
+      "name": "Lucario VSTAR",
+      "number": "SWSH214",
+      "setId": "swshp",
+      "dex": [
+        448
+      ],
+      "notes": "Lucario VSTAR Premium Collection etched VSTAR"
+    },
+    {
+      "id": "swshp-SWSH291",
+      "name": "Lucario VSTAR",
+      "number": "SWSH291",
+      "setId": "swshp",
+      "dex": [
+        448
+      ],
+      "notes": "Crown Zenith ETB etched foil Lucario VSTAR"
+    },
+    {
+      "id": "swshp-SWSH179",
+      "name": "Flareon V",
+      "number": "SWSH179",
+      "setId": "swshp",
+      "dex": [
+        136
+      ],
+      "notes": "Flareon VMAX Premium Collection special full-art"
+    },
+    {
+      "id": "swshp-SWSH180",
+      "name": "Flareon VMAX",
+      "number": "SWSH180",
+      "setId": "swshp",
+      "dex": [
+        136
+      ],
+      "notes": "Flareon VMAX Premium Collection special illustration"
+    },
+    {
+      "id": "swshp-SWSH181",
+      "name": "Vaporeon V",
+      "number": "SWSH181",
+      "setId": "swshp",
+      "dex": [
+        134
+      ],
+      "notes": "Vaporeon VMAX Premium Collection special full-art"
+    },
+    {
+      "id": "swshp-SWSH182",
+      "name": "Vaporeon VMAX",
+      "number": "SWSH182",
+      "setId": "swshp",
+      "dex": [
+        134
+      ],
+      "notes": "Vaporeon VMAX Premium Collection special illustration"
+    },
+    {
+      "id": "swshp-SWSH183",
+      "name": "Jolteon V",
+      "number": "SWSH183",
+      "setId": "swshp",
+      "dex": [
+        135
+      ],
+      "notes": "Jolteon VMAX Premium Collection special full-art"
+    },
+    {
+      "id": "swshp-SWSH184",
+      "name": "Jolteon VMAX",
+      "number": "SWSH184",
+      "setId": "swshp",
+      "dex": [
+        135
+      ],
+      "notes": "Jolteon VMAX Premium Collection special illustration"
+    },
+    {
+      "id": "swshp-SWSH194",
+      "name": "Leafeon V",
+      "number": "SWSH194",
+      "setId": "swshp",
+      "dex": [
+        470
+      ],
+      "notes": "Leafeon VSTAR Special Collection full-art V"
+    },
+    {
+      "id": "swshp-SWSH195",
+      "name": "Leafeon VSTAR",
+      "number": "SWSH195",
+      "setId": "swshp",
+      "dex": [
+        470
+      ],
+      "notes": "Leafeon VSTAR Special Collection etched VSTAR"
+    },
+    {
+      "id": "swshp-SWSH196",
+      "name": "Glaceon V",
+      "number": "SWSH196",
+      "setId": "swshp",
+      "dex": [
+        471
+      ],
+      "notes": "Glaceon VSTAR Special Collection full-art V"
+    },
+    {
+      "id": "swshp-SWSH197",
+      "name": "Glaceon VSTAR",
+      "number": "SWSH197",
+      "setId": "swshp",
+      "dex": [
+        471
+      ],
+      "notes": "Glaceon VSTAR Special Collection etched VSTAR"
+    },
+    {
+      "id": "swshp-SWSH263",
+      "name": "Zeraora V",
+      "number": "SWSH263",
+      "setId": "swshp",
+      "dex": [
+        807
+      ],
+      "notes": "Zeraora VMAX & VSTAR Battle Box etched"
+    },
+    {
+      "id": "swshp-SWSH264",
+      "name": "Zeraora VMAX",
+      "number": "SWSH264",
+      "setId": "swshp",
+      "dex": [
+        807
+      ],
+      "notes": "Zeraora VMAX & VSTAR Battle Box etched"
+    },
+    {
+      "id": "swshp-SWSH265",
+      "name": "Zeraora VSTAR",
+      "number": "SWSH265",
+      "setId": "swshp",
+      "dex": [
+        807
+      ],
+      "notes": "Zeraora VMAX & VSTAR Battle Box etched VSTAR"
+    },
+    {
+      "id": "swshp-SWSH266",
+      "name": "Deoxys V",
+      "number": "SWSH266",
+      "setId": "swshp",
+      "dex": [
+        386
+      ],
+      "notes": "Deoxys VMAX & VSTAR Battle Box etched"
+    },
+    {
+      "id": "swshp-SWSH267",
+      "name": "Deoxys VMAX",
+      "number": "SWSH267",
+      "setId": "swshp",
+      "dex": [
+        386
+      ],
+      "notes": "Deoxys VMAX & VSTAR Battle Box etched"
+    },
+    {
+      "id": "swshp-SWSH268",
+      "name": "Deoxys VSTAR",
+      "number": "SWSH268",
+      "setId": "swshp",
+      "dex": [
+        386
+      ],
+      "notes": "Deoxys VMAX & VSTAR Battle Box etched VSTAR"
+    },
+    {
+      "id": "swshp-SWSH235",
+      "name": "Dragonite V",
+      "number": "SWSH235",
+      "setId": "swshp",
+      "dex": [
+        149
+      ],
+      "notes": "Pokémon GO Premier Deck Holder Collection Dragonite V"
+    },
+    {
+      "id": "swshp-SWSH236",
+      "name": "Dragonite VSTAR",
+      "number": "SWSH236",
+      "setId": "swshp",
+      "dex": [
+        149
+      ],
+      "notes": "Pokémon GO Premier Deck Holder Collection etched Dragonite VSTAR"
+    },
+    {
+      "id": "swshp-SWSH285",
+      "name": "Pikachu V",
+      "number": "SWSH285",
+      "setId": "swshp",
+      "dex": [
+        25
+      ],
+      "notes": "Crown Zenith Special Collection—Pikachu VMAX companion V"
+    },
+    {
+      "id": "swshp-SWSH286",
+      "name": "Pikachu VMAX",
+      "number": "SWSH286",
+      "setId": "swshp",
+      "dex": [
+        25
+      ],
+      "notes": "Crown Zenith Special Collection—Pikachu VMAX etched/full-art"
+    },
+    {
+      "id": "swshp-SWSH292",
+      "name": "Zacian V",
+      "number": "SWSH292",
+      "setId": "swshp",
+      "dex": [
+        888
+      ],
+      "notes": "Crown Zenith Premium Figure Collection Shiny Zacian V etched"
+    },
+    {
+      "id": "swshp-SWSH293",
+      "name": "Zamazenta V",
+      "number": "SWSH293",
+      "setId": "swshp",
+      "dex": [
+        889
+      ],
+      "notes": "Crown Zenith Premium Figure Collection Shiny Zamazenta V etched"
+    },
+    {
+      "id": "swshp-SWSH074",
+      "name": "Special Delivery Pikachu",
+      "number": "SWSH074",
+      "setId": "swshp",
+      "dex": [
+        25
+      ],
+      "notes": "Special Delivery Pikachu — Pokémon Center illustration chase"
+    },
+    {
+      "id": "swshp-SWSH075",
+      "name": "Special Delivery Charizard",
+      "number": "SWSH075",
+      "setId": "swshp",
+      "dex": [
+        6
+      ],
+      "notes": "Special Delivery Charizard — Pokémon Center illustration chase"
+    },
+    {
+      "id": "swshp-SWSH177",
+      "name": "Special Delivery Bidoof",
+      "number": "SWSH177",
+      "setId": "swshp",
+      "dex": [
+        399
+      ],
+      "notes": "Special Delivery Bidoof — Pokémon Center illustration chase"
+    },
+    {
+      "id": "svp-52",
+      "name": "Mewtwo",
+      "number": "52",
+      "setId": "svp",
+      "dex": [
+        150
+      ],
+      "notes": "Scarlet & Violet—151 Ultra-Premium Collection illustration rare"
+    },
+    {
+      "id": "svp-53",
+      "name": "Mew ex",
+      "number": "53",
+      "setId": "svp",
+      "dex": [
+        151
+      ],
+      "notes": "Scarlet & Violet—151 Ultra-Premium Collection special illustration rare"
+    },
+    {
+      "id": "smp-SM247",
+      "name": "Reshiram & Charizard-GX",
+      "number": "SM247",
+      "setId": "smp",
+      "dex": [
+        6,
+        643
+      ],
+      "notes": "Reshiram & Charizard-GX Premium Collection gold full-art"
+    },
+    {
+      "id": "smp-SM248",
+      "name": "Pikachu & Zekrom-GX",
+      "number": "SM248",
+      "setId": "smp",
+      "dex": [
+        25,
+        644
+      ],
+      "notes": "Pikachu & Zekrom-GX Premium Collection gold full-art"
+    }
+  ],
+  "meta": {
+    "count": 43,
+    "sources": [
+      "PokemonTCG/pokemon-tcg-data GitHub mirror cards/en/swshp.json,smp.json,svp.json (api.pokemontcg.io TLS failed)",
+      "PokeBeach / TCGplayer / Pokemon.com product copy: Charizard UPC SWSH260-262 etched foil alt arts",
+      "Origin Forme Dialga/Palkia, Hisuian Zoroark, Kleavor, Lucario VSTAR Premium Collections — etched foil",
+      "Flareon/Vaporeon/Jolteon VMAX Premium Collections — special illustration EN promos",
+      "Leafeon/Glaceon VSTAR Special Collections — etched VSTAR",
+      "Zeraora/Deoxys VMAX & VSTAR Battle Boxes — etched promos",
+      "Pokémon GO Premier Deck Holder—Dragonite VSTAR; Crown Zenith Pikachu VMAX / Shiny Zacian-Zamazenta / Lucario ETB",
+      "Scarlet & Violet—151 UPC: svp-52 Mewtwo IR, svp-53 Mew ex SIR",
+      "SM Premium Collections: smp-SM247 / SM248 gold full-art TAG TEAMs",
+      "Serebii SWSH/SV promo checklists for number↔name confirmation"
+    ],
+    "generatedAt": "2026-09-18T13:24:59-07:00",
+    "gaps": [
+      {
+        "id": "swshp-SWSH306",
+        "reason": "Arceus UPC is metal card, not paper special-art promo"
+      },
+      {
+        "id": "swshp-SWSH307",
+        "reason": "Arceus UPC is metal card, not paper special-art promo"
+      },
+      {
+        "id": "swshp-SWSH204",
+        "reason": "Arceus V figure-collection promo; not confirmed SAR/etched special-art class"
+      },
+      {
+        "id": "swshp-SWSH133",
+        "reason": "Lance's Charizard V — Champions Path product promo; not UPC special-art class"
+      },
+      {
+        "id": "swshp-SWSH134",
+        "reason": "Dark Sylveon V — Celebrations; class unclear vs special-art allowlist"
+      },
+      {
+        "id": "swshp-SWSH143",
+        "reason": "Pikachu V Celebrations Classic Collection; not confirmed same class"
+      },
+      {
+        "id": "smp-SM201",
+        "reason": "Earlier Reshiram & Charizard-GX promo; prefer gold SM247"
+      },
+      {
+        "id": "Celebrations metal Charizard/Pikachu",
+        "reason": "Metal UPC cards, not SWSH Black Star IDs"
+      },
+      {
+        "id": "svp-56 / other SVP ex promos",
+        "reason": "Many are standard product foils, not UPC IR/SIR; needs per-card review"
+      },
+      {
+        "id": "XY/BW Black Star special arts",
+        "reason": "Not audited this pass; leave for v2"
+      }
+    ]
+  }
+}

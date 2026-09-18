@@ -9,6 +9,7 @@ import {
   RARITIES_INCLUDE,
   REQUIRE_SUPERTYPE,
 } from '../config/art-forward-taxonomy';
+import { isSpecialArtPromoId } from '../config/special-art-promos';
 import type { TcgCard } from './tcgTypes';
 
 function globToRegExp(pattern: string): RegExp {
@@ -34,6 +35,11 @@ export function isExcludedSupertype(supertype: string | undefined): boolean {
  */
 export function isArtForwardCard(card: TcgCard): boolean {
   if (isExcludedSupertype(card.supertype)) return false;
+
+  // specialArtPromo: allowlisted id OR the existing rarity/gallery net below.
+  if (isSpecialArtPromoId(card.id) && card.supertype === REQUIRE_SUPERTYPE) {
+    return true;
+  }
 
   const rarity = card.rarity ?? '';
   const gallery = isGallerySetId(card.set?.id);
