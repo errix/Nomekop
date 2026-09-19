@@ -65,13 +65,8 @@ export default function App() {
   return (
     <div className="app">
       <header className="hero">
-        <p className="eyebrow">Nomekop · slice 1</p>
-        <h1>Art-forward TCG prints</h1>
-        <p className="lede">
-          Type a Pokémon. We resolve it to a National Dex number so every form — Alolan,
-          Galarian, costume, TAG TEAM — lands in the same bucket, then keep illustration-style
-          rarities with TCGPlayer USD snapshots.
-        </p>
+        <p className="eyebrow">Nomekop · </p>
+        <h1>Art-forward TCG Cards</h1>
         <SearchBar value={query} onChange={setQuery} onSelect={(entry) => void lookup(entry)} />
       </header>
 
