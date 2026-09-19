@@ -1,18 +1,22 @@
 import { useEffect, useId, useMemo, useRef, useState, type FormEvent } from 'react';
 import { suggestSpecies, type PokedexEntry } from '../lib/pokedex';
+import { IconClose } from './icons';
 
 type Props = {
   value: string;
   onChange: (value: string) => void;
   onSelect: (entry: PokedexEntry) => void;
+  onClear: () => void;
 };
 
-export function SearchBar({ value, onChange, onSelect }: Props) {
+export function SearchBar({ value, onChange, onSelect, onClear }: Props) {
   const id = useId();
   const listId = `${id}-suggestions`;
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
   const wrapRef = useRef<HTMLFormElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const hasQuery = value.length > 0;
 
   const suggestions = useMemo(() => suggestSpecies(value, 8), [value]);
 
@@ -40,43 +44,66 @@ export function SearchBar({ value, onChange, onSelect }: Props) {
     if (hit) commit(hit);
   }
 
+  function clearSearch() {
+    onClear();
+    setOpen(false);
+    inputRef.current?.focus();
+  }
+
   return (
     <form className="search" ref={wrapRef} onSubmit={onSubmit} role="search">
       <label className="search-label" htmlFor={id}>
         Pokémon
       </label>
       <div className="search-field">
-        <input
-          id={id}
-          type="search"
-          inputMode="search"
-          autoComplete="off"
-          spellCheck={false}
-          placeholder="Charizard, Meowth, Detective Pikachu…"
-          value={value}
-          aria-autocomplete="list"
-          aria-controls={listId}
-          aria-expanded={open && suggestions.length > 0}
-          role="combobox"
-          onChange={(event) => {
-            onChange(event.target.value);
-            setOpen(true);
-          }}
-          onFocus={() => setOpen(true)}
-          onKeyDown={(event) => {
-            if (!open || !suggestions.length) return;
-            if (event.key === 'ArrowDown') {
-              event.preventDefault();
-              setActive((i) => (i + 1) % suggestions.length);
-            } else if (event.key === 'ArrowUp') {
-              event.preventDefault();
-              setActive((i) => (i - 1 + suggestions.length) % suggestions.length);
-            } else if (event.key === 'Escape') {
-              setOpen(false);
-            }
-          }}
-        />
-        <button type="submit">Search</button>
+        <div className={hasQuery ? 'search-input-wrap has-clear' : 'search-input-wrap'}>
+          <input
+            ref={inputRef}
+            id={id}
+            type="search"
+            inputMode="search"
+            autoComplete="off"
+            spellCheck={false}
+            placeholder="Charizard, Meowth, Detective Pikachu…"
+            value={value}
+            aria-autocomplete="list"
+            aria-controls={listId}
+            aria-expanded={open && suggestions.length > 0}
+            role="combobox"
+            onChange={(event) => {
+              onChange(event.target.value);
+              setOpen(true);
+            }}
+            onFocus={() => setOpen(true)}
+            onKeyDown={(event) => {
+              if (!open || !suggestions.length) return;
+              if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                setActive((i) => (i + 1) % suggestions.length);
+              } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                setActive((i) => (i - 1 + suggestions.length) % suggestions.length);
+              } else if (event.key === 'Escape') {
+                setOpen(false);
+              }
+            }}
+          />
+          {hasQuery && (
+            <button
+              type="button"
+              className="search-clear"
+              aria-label="Clear search"
+              title="Clear search"
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={clearSearch}
+            >
+              <IconClose size={18} />
+            </button>
+          )}
+        </div>
+        <button type="submit" className="search-submit">
+          Search
+        </button>
       </div>
       {open && suggestions.length > 0 && (
         <ul id={listId} className="suggestions" role="listbox">

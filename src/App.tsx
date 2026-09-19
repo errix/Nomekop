@@ -46,6 +46,18 @@ export default function App() {
     }
   }, []);
 
+  const resetSearch = useCallback(() => {
+    setQuery('');
+    setSpecies(undefined);
+    setResult(null);
+    setError(null);
+    setLoading(false);
+    setFacet('all');
+    const url = new URL(window.location.href);
+    url.searchParams.delete('q');
+    window.history.replaceState({}, '', url);
+  }, []);
+
   useEffect(() => {
     const initial = resolveSpecies(readInitialQuery());
     if (initial) void lookup(initial);
@@ -67,7 +79,12 @@ export default function App() {
       <header className="hero">
         <p className="eyebrow">Nomekop · </p>
         <h1>Art-forward TCG Cards</h1>
-        <SearchBar value={query} onChange={setQuery} onSelect={(entry) => void lookup(entry)} />
+        <SearchBar
+          value={query}
+          onChange={setQuery}
+          onSelect={(entry) => void lookup(entry)}
+          onClear={resetSearch}
+        />
       </header>
 
       {species && (
