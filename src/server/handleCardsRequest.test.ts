@@ -1,7 +1,10 @@
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { GET, handler } from '../../api/cards';
 import { fetchSpeciesPrints } from '../lib/fetchSpeciesPrints';
 import { handleCardsRequest } from './handleCardsRequest';
+import { GET, handler } from './vercelCards';
 
 describe('handleCardsRequest', () => {
   it('returns 400 JSON for missing or wildcard dex instead of throwing', async () => {
@@ -64,6 +67,15 @@ describe('Vercel /api/cards handler', () => {
     expect(status).toBe(400);
     expect(headers['content-type']).toMatch(/application\/json/);
     expect(body).toEqual({ error: 'Pass a National Pokédex number as ?dex=52' });
+  });
+
+  it('ships a self-contained api/cards.js (Vercel Node cannot load ../src/server/*)', () => {
+    const bundled = readFileSync(
+      join(dirname(fileURLToPath(import.meta.url)), '../../api/cards.js'),
+      'utf8',
+    );
+    expect(bundled).not.toMatch(/from ["']\.\.\/src\/server\/handleCardsRequest["']/);
+    expect(bundled).toMatch(/export\s*\{/);
   });
 
   it('falls back to sample prints when live fetch fails and no key is set', async () => {

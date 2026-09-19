@@ -1,4 +1,4 @@
-import { handleCardsRequest, jsonHeaders } from '../src/server/handleCardsRequest';
+import { handleCardsRequest, jsonHeaders } from './handleCardsRequest';
 
 type NodeLikeResponse = {
   status: (code: number) => NodeLikeResponse;
