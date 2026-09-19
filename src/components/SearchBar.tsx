@@ -76,7 +76,7 @@ export function SearchBar({ value, onChange, onSelect }: Props) {
             }
           }}
         />
-        <button type="submit">Look up</button>
+        <button type="submit">Search</button>
       </div>
       {open && suggestions.length > 0 && (
         <ul id={listId} className="suggestions" role="listbox">
