@@ -614,16 +614,32 @@ a {
   align-items: center;
   justify-content: center;
   padding: 20px 24px 40px;
+  perspective: 900px;
 }
 
 .fs-card {
+  position: relative;
   width: min(100%, 320px);
   aspect-ratio: 63 / 88;
   border-radius: 16px;
   border: 1px solid #2a2a2e;
   overflow: hidden;
   background: #141416;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  transform-style: preserve-3d;
+  transform-origin: center center;
+  transform: rotateX(calc(var(--rx, 0) * 1deg)) rotateY(calc(var(--ry, 0) * 1deg));
+  transition: transform 0.45s cubic-bezier(0.22, 1.35, 0.36, 1);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    calc(var(--ry, 0) * -0.4px) calc(var(--rx, 0) * 0.4px) 40px rgba(0, 0, 0, 0.35);
+}
+
+.fs-card.is-dragging {
+  cursor: grabbing;
+  transition: transform 0.08s ease-out;
 }
 
 .fs-card img,
@@ -631,6 +647,31 @@ a {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none;
+}
+
+/* Soft white glare only — no foil / rainbow / holo sheen. */
+.fs-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    farthest-corner circle at var(--gx, 50%) var(--gy, 35%),
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.12) 28%,
+    transparent 58%
+  );
+  mix-blend-mode: soft-light;
+  opacity: 0.85;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fs-card,
+  .fs-card.is-dragging {
+    transform: none;
+    transition: none;
+  }
 }
 
 .fs-hint {

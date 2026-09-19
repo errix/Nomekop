@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type CSSProperties } from 'react';
 import type { TcgCard } from '../lib/tcgTypes';
 import { IconBack } from './icons';
+import { useCardTilt } from './useCardTilt';
 
 type Props = {
   card: TcgCard;
@@ -10,6 +11,7 @@ type Props = {
 export function CardFullscreen({ card, onBack }: Props) {
   const backRef = useRef<HTMLButtonElement>(null);
   const image = card.images?.large ?? card.images?.small;
+  const { dragging, vars, handlers } = useCardTilt();
 
   useEffect(() => {
     backRef.current?.focus();
@@ -29,12 +31,17 @@ export function CardFullscreen({ card, onBack }: Props) {
         </button>
       </div>
       <div className="fs-stage">
-        <div className="fs-card">
+        <div
+          className={dragging ? 'fs-card is-dragging' : 'fs-card'}
+          style={vars as CSSProperties}
+          {...handlers}
+        >
           {image ? (
-            <img src={image} alt="" />
+            <img src={image} alt="" draggable={false} />
           ) : (
             <div className="print-missing">card art</div>
           )}
+          <div className="fs-glare" aria-hidden="true" />
         </div>
       </div>
       <p className="fs-hint">Image only · no prices</p>
