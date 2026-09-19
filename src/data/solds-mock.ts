@@ -1,7 +1,7 @@
 /**
  * Example recent solds — not live comps.
  * Charizard sv3pt5-199 raw L/M/H is locked to the Eric/Smeargle mock
- * ($385 / $405 / $428, 14d · 11 sold). Outliers stay off the tile bar.
+ * ($385 / $405 / $428, 14d · 11 sold). Outliers stay off the modal bar.
  */
 import type { SoldSale } from '../lib/solds';
 

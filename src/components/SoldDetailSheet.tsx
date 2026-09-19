@@ -30,7 +30,7 @@ export function SoldDetailSheet({ card, open, onClose }: Props) {
         <p className="sheet-kicker">Recent solds</p>
         <h3 id="sold-sheet-title">{card.name}</h3>
         <p className="muted">
-          Outliers and graded comps stay here. The tile bar is raw inliers only.
+          Outliers and graded comps stay here. The modal bar is raw inliers only.
         </p>
         <div className="sheet-kinds" role="tablist" aria-label="Raw or graded">
           <button type="button" className={kind === 'raw' ? 'is-on' : undefined} onClick={() => setKind('raw')}>

@@ -36,7 +36,7 @@ describe('sold range adapter', () => {
     expect(formatCompactUsd(385)).toBe('$385');
   });
 
-  it('keeps raw and graded series separate and leaves outliers off the tile bar', () => {
+  it('keeps raw and graded series separate and leaves outliers off the modal bar', () => {
     const card = MOCK_CARDS.find((item) => item.id === 'sv3pt5-199')!;
     const raw = loadSoldRange(card, 'raw', DEV_ENV)!;
     const graded = loadSoldRange(card, 'graded', DEV_ENV)!;

@@ -1,7 +1,7 @@
 /**
  * Recent-solds adapter.
  *
- * Primary data intent for the tile bar is TCGPlayer recent sales (NM raw).
+ * Primary data intent for the card-modal bar is TCGPlayer recent sales (NM raw).
  * No live feed is wired — no scrape, no invented paid API.
  *
  * Swap hook: `loadLiveSoldRange` is where a future partner-key / paid-vendor
@@ -148,7 +148,7 @@ function fixtureSoldRange(card: TcgCard, kind: SoldKind): SoldRange | undefined 
   return summarize(card.id, kind, salesFor(card.id, kind));
 }
 
-/** Tile/default series is raw. Graded is a separate series for the detail sheet. */
+/** Modal/default series is raw. Graded is a separate series for the detail sheet. */
 export function loadSoldRange(
   card: TcgCard,
   kind: SoldKind = 'raw',

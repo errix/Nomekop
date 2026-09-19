@@ -2,7 +2,7 @@
  * Live venue deep links for a print.
  *
  * TCGPlayer: product page from pokemontcg.io / pricesFor when present.
- * eBay: sold + completed search (verify only — not the tile bar feed).
+ * eBay: sold + completed search (verify only — not the modal bar feed).
  *
  * No marketplace solds API is called here.
  */
