@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { AboutModal } from './components/AboutModal';
 import { EmptyState } from './components/EmptyState';
 import { FormPill } from './components/FormPill';
+import { IconHelp } from './components/icons';
 import { PrintGrid } from './components/PrintGrid';
 import { SearchBar } from './components/SearchBar';
 import { loadSpeciesPrints } from './lib/client';
@@ -27,6 +29,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [facet, setFacet] = useState<FormFilter>('all');
+  const [aboutOpen, setAboutOpen] = useState(false);
 
   const lookup = useCallback(async (entry: PokedexEntry) => {
     setSpecies(entry);
@@ -77,7 +80,18 @@ export default function App() {
   return (
     <div className="app">
       <header className="hero">
-        <p className="eyebrow">Nomekop · </p>
+        <div className="kicker-row">
+          <p className="eyebrow">Nomekop · </p>
+          <button
+            type="button"
+            className="help-btn"
+            aria-label="About Nomekop"
+            title="About Nomekop"
+            onClick={() => setAboutOpen(true)}
+          >
+            <IconHelp />
+          </button>
+        </div>
         <h1>Art-forward TCG Cards</h1>
         <SearchBar
           value={query}
@@ -140,6 +154,8 @@ export default function App() {
           Galarian Meowth is #{getSpeciesByDex(52)?.n}.
         </p>
       )}
+
+      {aboutOpen && <AboutModal onClose={() => setAboutOpen(false)} />}
     </div>
   );
 }
