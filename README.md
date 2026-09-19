@@ -4,7 +4,7 @@ Phone-friendly lookup for **art-forward / illustration-style** Pokémon TCG prin
 
 Search is **species-first**: you type a name, Nomekop resolves it to National Dex number(s), then queries `nationalPokedexNumbers:{dex}`. Alolan / Galarian / Hisuian / Paldean / costume / TAG TEAM prints of the same species land in one bucket. Form pills stay in the results chrome; the print grid itself is **image-only**.
 
-**Inspect a print.** Phone grid is two columns of card art (no prices, sold bar, rarity, venue buttons, or honesty badges on the tile). Tap a tile for a **centered modal** with name / set / rarity, TCGPlayer Market + Mid USD, the recent-solds bar, and TCGPlayer / eBay deep links. Modal **X** or the dimmed backdrop returns to the grid. The fullscreen icon opens an **image-only** view; a chevron back-arrow returns to the still-open modal (no X on fullscreen).
+**Inspect a print.** Phone grid is two columns of card art (no prices, sold bar, rarity, venue buttons, or honesty badges on the tile). Tap a tile for a **centered modal** with name / set / rarity, TCGPlayer Market + Mid USD, the recent-solds bar, and TCGPlayer / eBay deep links. Modal **X** or the dimmed backdrop returns to the grid. The fullscreen icon opens an **image-only** view; a chevron back-arrow returns to the still-open modal (no X on fullscreen). Desktop fullscreen: click-drag tilts the card and a soft white glare follows the pointer; release springs flat. Idle hover tracks glare without tilting. No foil / rainbow sheen — glare is white only, and only on the fullscreen card (not the grid or density modal).
 
 ## Run locally
 
