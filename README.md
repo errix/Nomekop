@@ -90,7 +90,9 @@ Set `POKEMONTCG_API_KEY` in the host’s environment. Free runtime deps only (`r
 - Framework preset: Vite
 - Build command: `npm run build`
 - Output: `dist`
-- Serverless proxy: [`api/cards.ts`](api/cards.ts) (used as `/api/cards?dex=6`)
+- Serverless proxy: bundled [`api/cards.js`](api/cards.js) (used as `/api/cards?dex=6`)
+- Source for that function is [`src/server/vercelCards.ts`](src/server/vercelCards.ts). Vercel compiles `/api/*.ts` one file at a time; Node ESM then cannot load `../src/server/handleCardsRequest` (prod log: `ERR_MODULE_NOT_FOUND`). `npm run build` inlines the lookup into a single `api/cards.js` so Hobby does not crash before the mock fallback.
+- `POKEMONTCG_API_KEY` is optional. Without it the public pokemontcg.io rate limit applies; live failures still return sample prints instead of a hard 500.
 
 ### Netlify
 

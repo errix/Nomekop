@@ -6,13 +6,22 @@ type NetlifyEvent = {
 };
 
 export async function handler(event: NetlifyEvent) {
-  const dex = event.queryStringParameters?.dex ?? '';
-  const requestUrl = event.rawUrl ?? `/api/cards?dex=${dex}`;
-  const apiKey = process.env.POKEMONTCG_API_KEY ?? '';
-  const { status, body } = await handleCardsRequest(requestUrl, apiKey);
-  return {
-    statusCode: status,
-    headers: jsonHeaders(),
-    body: JSON.stringify(body),
-  };
+  try {
+    const dex = event.queryStringParameters?.dex ?? '';
+    const requestUrl = event.rawUrl ?? `/api/cards?dex=${dex}`;
+    const apiKey = process.env.POKEMONTCG_API_KEY ?? '';
+    const { status, body } = await handleCardsRequest(requestUrl, apiKey);
+    return {
+      statusCode: status,
+      headers: jsonHeaders(),
+      body: JSON.stringify(body),
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Cards lookup failed';
+    return {
+      statusCode: 500,
+      headers: jsonHeaders(),
+      body: JSON.stringify({ error: message }),
+    };
+  }
 }
