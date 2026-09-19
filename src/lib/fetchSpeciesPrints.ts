@@ -127,6 +127,9 @@ export async function fetchSpeciesPrints(
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown API error';
-    return mockResult(dex, `Live pokemontcg.io lookup failed (${message}).`);
+    const keyHint = apiKey
+      ? ''
+      : ' POKEMONTCG_API_KEY is unset (optional free key from https://dev.pokemontcg.io).';
+    return mockResult(dex, `Live pokemontcg.io lookup failed (${message}).${keyHint}`);
   }
 }
