@@ -91,7 +91,29 @@ Form pills keep the existing **label + count badge** and add a D1 rev3 ownership
 
 Source of truth is the free in-repo seed [`src/data/owned-species.json`](src/data/owned-species.json) (Eric’s EXAMPLE collection — Meowth matches the D1 rev3 mock pattern; Charizard is a second example). The app reads it through the typed loader in [`src/lib/ownedSpecies.ts`](src/lib/ownedSpecies.ts). This is not a live inventory API.
 
-**Delibird** updates that JSON via pull request when prints are acquired. Form keys must match catalog ids (`base`, `alolan`, `galarian`, `mega-x`, …).
+### Delibird write convention
+
+Update [`src/data/owned-species.json`](src/data/owned-species.json) via pull request. Top-level shape is the staging draft contract — only these keys:
+
+```json
+{
+  "version": 1,
+  "updatedAt": "2026-09-21T00:00:00.000Z",
+  "species": []
+}
+```
+
+Per-species row:
+
+| Field | Write rule |
+| --- | --- |
+| `key` | lowercase slug (`meowth`, `charizard`) |
+| `dex` | National Dex number (Meowth `52`) |
+| `forms` | catalog form ids → `true` if Eric owns ≥1 full-art / illustration of that form |
+| `owned` | `true` iff any `forms` value is `true` (keep in sync) |
+| `acquired` | reserved list (card ids later); unused by the pill UI today — write `[]` |
+
+Form keys must match catalog ids from [`src/data/species-forms-catalog-v1.json`](src/data/species-forms-catalog-v1.json) (`base`, `alolan`, `galarian`, `mega-x`, … — same ids as `formIdFromLabel`). Species omitted from `species[]` render empty rings on every pill. Bump `updatedAt` (ISO-8601) on each write. Do not add a paid inventory API.
 
 ## Deploy
 

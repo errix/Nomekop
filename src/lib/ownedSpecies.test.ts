@@ -10,10 +10,11 @@ import {
 } from './ownedSpecies';
 
 describe('owned-species seed (Eric EXAMPLE collection)', () => {
-  it('is version 1 with documented EXAMPLE meta', () => {
+  it('uses the Delibird top-level shape: version, updatedAt, species[]', () => {
+    expect(Object.keys(ownedJson).sort()).toEqual(['species', 'updatedAt', 'version']);
     expect(OWNED_SPECIES_FILE.version).toBe(1);
     expect(OWNED_SPECIES_FILE.updatedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
-    expect(OWNED_SPECIES_FILE.meta?.example).toBe(true);
+    expect(Array.isArray(OWNED_SPECIES_FILE.species)).toBe(true);
     expect(OWNED_SPECIES_FILE.species.length).toBeGreaterThanOrEqual(2);
   });
 

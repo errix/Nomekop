@@ -1,7 +1,10 @@
 /**
  * In-repo species ownership (free path).
  * Source of truth: src/data/owned-species.json — Eric’s EXAMPLE collection seed.
- * Delibird updates that file via PR; the app never calls a paid inventory API.
+ *
+ * Delibird write contract (matches staging draft top-level shape):
+ *   { version, updatedAt, species[] }
+ * After merge, Delibird updates that file via PR — no paid inventory API.
  *
  * D1 rev3: a form is owned when forms[formId] is true
  * (≥1 full-art / illustration of that form). All-forms is a rollup.
@@ -24,22 +27,26 @@ export type OwnedSpeciesRecord = {
   acquired: AcquiredPrint[];
 };
 
+/** Top-level shape Delibird writes: version + updatedAt + species[]. */
 export type OwnedSpeciesFile = {
   version: number;
   updatedAt: string;
-  meta?: {
-    example?: boolean;
-    purpose?: string;
-    ownership?: string;
-    note?: string;
-    seed?: string;
-  };
   species: OwnedSpeciesRecord[];
 };
 
 export const OWNED_SPECIES_FILE = ownedJson as unknown as OwnedSpeciesFile;
 
-const BY_DEX = new Map(OWNED_SPECIES_FILE.species.map((row) => [row.dex, row]));
+const BY_DEX = new Map(
+  OWNED_SPECIES_FILE.species.map((row) => [
+    row.dex,
+    {
+      ...row,
+      forms: row.forms ?? {},
+      acquired: row.acquired ?? [],
+      owned: row.owned ?? Object.values(row.forms ?? {}).some(Boolean),
+    },
+  ]),
+);
 
 export function getOwnedSpecies(dex: number): OwnedSpeciesRecord | undefined {
   return BY_DEX.get(dex);
