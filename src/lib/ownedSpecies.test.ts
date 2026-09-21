@@ -9,7 +9,7 @@ import {
   ownershipMarkForPill,
 } from './ownedSpecies';
 
-describe('owned-species seed (Eric EXAMPLE collection)', () => {
+describe('owned-species seed (Eric’s first acquisitions)', () => {
   it('uses the Delibird top-level shape: version, updatedAt, species[]', () => {
     expect(Object.keys(ownedJson).sort()).toEqual(['species', 'updatedAt', 'version']);
     expect(OWNED_SPECIES_FILE.version).toBe(1);
@@ -34,8 +34,34 @@ describe('owned-species seed (Eric EXAMPLE collection)', () => {
   it('keeps species.owned in sync with any form flag', () => {
     for (const row of OWNED_SPECIES_FILE.species) {
       expect(row.owned).toBe(Object.values(row.forms).some(Boolean));
-      expect(row.acquired).toEqual([]);
     }
+  });
+
+  it('seeds Suicune, Gengar, and Alolan Exeggutor with real acquired entries', () => {
+    expect(ownedJson.species.map((row) => [row.dex, row.key, row.owned])).toEqual([
+      [245, 'suicune', true],
+      [94, 'gengar', true],
+      [103, 'exeggutor', true],
+    ]);
+
+    const byDex = Object.fromEntries(ownedJson.species.map((row) => [row.dex, row]));
+
+    expect(byDex[245]?.forms).toEqual({ base: true });
+    expect(byDex[245]?.acquired).toEqual([
+      { at: '2026-09-21T16:35:07.000Z', raw: 'Suicune' },
+    ]);
+
+    expect(byDex[94]?.forms).toEqual({
+      base: true,
+      mega: false,
+      gigantamax: false,
+    });
+    expect(byDex[94]?.acquired).toEqual([{ at: '2026-09-21T16:35:07.000Z', raw: 'Gengar' }]);
+
+    expect(byDex[103]?.forms).toEqual({ base: false, alolan: true });
+    expect(byDex[103]?.acquired).toEqual([
+      { at: '2026-09-21T16:35:07.000Z', raw: 'Alolan Exeggutor' },
+    ]);
   });
 
   it('uses catalog form ids (not display labels) as form keys', () => {
@@ -51,23 +77,31 @@ describe('owned-species seed (Eric EXAMPLE collection)', () => {
 });
 
 describe('ownership → D1 rev3 pill mark', () => {
-  it('maps Meowth to the mock pattern: Galarian owned; Base / Alolan / Gigantamax empty', () => {
-    expect(ownershipMarkForPill(52, 'all')).toBe('owned');
-    expect(ownershipMarkForPill(52, 'base')).toBe('unowned');
-    expect(ownershipMarkForPill(52, 'alolan')).toBe('unowned');
-    expect(ownershipMarkForPill(52, 'galarian')).toBe('owned');
-    expect(ownershipMarkForPill(52, 'gigantamax')).toBe('unowned');
-    expect(isFormOwned(52, 'galarian')).toBe(true);
-    expect(isFormOwned(52, 'base')).toBe(false);
-    expect(isAnyFormOwned(52)).toBe(true);
+  it('maps Suicune: Base owned; All forms rollup filled', () => {
+    expect(getOwnedSpecies(245)?.key).toBe('suicune');
+    expect(ownershipMarkForPill(245, 'all')).toBe('owned');
+    expect(ownershipMarkForPill(245, 'base')).toBe('owned');
+    expect(isFormOwned(245, 'base')).toBe(true);
+    expect(isAnyFormOwned(245)).toBe(true);
   });
 
-  it('maps Charizard EXAMPLE: Base owned; megas / Gigantamax empty; All forms rollup filled', () => {
-    expect(ownershipMarkForPill(6, 'all')).toBe('owned');
-    expect(ownershipMarkForPill(6, 'base')).toBe('owned');
-    expect(ownershipMarkForPill(6, 'mega-x')).toBe('unowned');
-    expect(ownershipMarkForPill(6, 'mega-y')).toBe('unowned');
-    expect(ownershipMarkForPill(6, 'gigantamax')).toBe('unowned');
+  it('maps Gengar: Base owned; Mega / Gigantamax empty; All forms rollup filled', () => {
+    expect(ownershipMarkForPill(94, 'all')).toBe('owned');
+    expect(ownershipMarkForPill(94, 'base')).toBe('owned');
+    expect(ownershipMarkForPill(94, 'mega')).toBe('unowned');
+    expect(ownershipMarkForPill(94, 'gigantamax')).toBe('unowned');
+    expect(isFormOwned(94, 'base')).toBe(true);
+    expect(isFormOwned(94, 'mega')).toBe(false);
+    expect(isAnyFormOwned(94)).toBe(true);
+  });
+
+  it('maps Alolan Exeggutor: Alolan owned; Base empty; All forms rollup filled', () => {
+    expect(ownershipMarkForPill(103, 'all')).toBe('owned');
+    expect(ownershipMarkForPill(103, 'alolan')).toBe('owned');
+    expect(ownershipMarkForPill(103, 'base')).toBe('unowned');
+    expect(isFormOwned(103, 'alolan')).toBe(true);
+    expect(isFormOwned(103, 'base')).toBe(false);
+    expect(isAnyFormOwned(103)).toBe(true);
   });
 
   it('treats a catalog species with no seed row as all-empty (All forms ring)', () => {
@@ -79,8 +113,8 @@ describe('ownership → D1 rev3 pill mark', () => {
   });
 
   it('treats a missing form key as unowned (additive mark, not inferred)', () => {
-    expect(ownershipMarkForPill(52, 'hisuian')).toBe('unowned');
-    expect(isFormOwned(52, 'hisuian')).toBe(false);
+    expect(ownershipMarkForPill(245, 'mega')).toBe('unowned');
+    expect(isFormOwned(245, 'mega')).toBe(false);
   });
 
   it('exports the same JSON the loader typed', () => {
