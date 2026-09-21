@@ -42,6 +42,9 @@ describe('owned-species seed (Eric’s first acquisitions)', () => {
       [245, 'suicune', true],
       [94, 'gengar', true],
       [103, 'exeggutor', true],
+      [486, 'regigigas', true],
+      [267, 'beautifly', true],
+      [344, 'claydol', true],
     ]);
 
     const byDex = Object.fromEntries(ownedJson.species.map((row) => [row.dex, row]));
@@ -62,6 +65,19 @@ describe('owned-species seed (Eric’s first acquisitions)', () => {
     expect(byDex[103]?.acquired).toEqual([
       { at: '2026-09-21T16:35:07.000Z', raw: 'Alolan Exeggutor' },
     ]);
+
+    expect(byDex[486]?.forms).toEqual({ base: true });
+    expect(byDex[486]?.acquired).toEqual([
+      { at: '2026-09-21T17:42:49.000Z', raw: 'Regigigas' },
+    ]);
+
+    expect(byDex[267]?.forms).toEqual({ base: true });
+    expect(byDex[267]?.acquired).toEqual([
+      { at: '2026-09-21T17:42:49.000Z', raw: 'Beautifly' },
+    ]);
+
+    expect(byDex[344]?.forms).toEqual({ base: true });
+    expect(byDex[344]?.acquired).toEqual([{ at: '2026-09-21T17:42:49.000Z', raw: 'Claydol' }]);
   });
 
   it('uses catalog form ids (not display labels) as form keys', () => {

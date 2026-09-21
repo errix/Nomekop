@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-21T16:35:07.000Z",
+  "updatedAt": "2026-09-21T17:42:49.000Z",
   "species": [
     {
       "key": "suicune",
@@ -44,6 +44,48 @@
         {
           "at": "2026-09-21T16:35:07.000Z",
           "raw": "Alolan Exeggutor"
+        }
+      ]
+    },
+    {
+      "key": "regigigas",
+      "dex": 486,
+      "owned": true,
+      "forms": {
+        "base": true
+      },
+      "acquired": [
+        {
+          "at": "2026-09-21T17:42:49.000Z",
+          "raw": "Regigigas"
+        }
+      ]
+    },
+    {
+      "key": "beautifly",
+      "dex": 267,
+      "owned": true,
+      "forms": {
+        "base": true
+      },
+      "acquired": [
+        {
+          "at": "2026-09-21T17:42:49.000Z",
+          "raw": "Beautifly"
+        }
+      ]
+    },
+    {
+      "key": "claydol",
+      "dex": 344,
+      "owned": true,
+      "forms": {
+        "base": true
+      },
+      "acquired": [
+        {
+          "at": "2026-09-21T17:42:49.000Z",
+          "raw": "Claydol"
         }
       ]
     }
