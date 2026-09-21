@@ -278,7 +278,29 @@ a {
   gap: 0.4rem;
   background: transparent;
   white-space: nowrap;
-  padding: 0 0.4rem 0 0.8rem;
+  padding: 0 0.4rem 0 0.65rem;
+}
+
+.ownership-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.ownership-ball {
+  display: block;
+}
+
+.ownership-ring {
+  display: block;
+  color: var(--muted);
+}
+
+.facet-bar button.is-on .ownership-ring {
+  color: #24180b;
 }
 
 .facet-label {

@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-21T00:00:00.000Z",
+  "species": [
+    {
+      "key": "meowth",
+      "dex": 52,
+      "owned": true,
+      "forms": {
+        "base": false,
+        "alolan": false,
+        "galarian": true,
+        "gigantamax": false
+      },
+      "acquired": []
+    },
+    {
+      "key": "charizard",
+      "dex": 6,
+      "owned": true,
+      "forms": {
+        "base": true,
+        "mega-x": false,
+        "mega-y": false,
+        "gigantamax": false
+      },
+      "acquired": []
+    }
+  ]
+}
