@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-21T00:00:00.000Z",
+  "meta": {
+    "example": true,
+    "purpose": "Eric’s EXAMPLE collection seed — editable, not a live inventory API.",
+    "ownership": "A form is owned when forms[formId] is true (≥1 full-art / illustration of that form). The All forms pill is a rollup: filled if any form flag is true. Species.owned is the same rollup, kept in sync for Delibird.",
+    "note": "Delibird updates this JSON via pull request when prints are acquired. Form keys must match catalog ids from species-forms-catalog-v1.json (formIdFromLabel).",
+    "seed": "Meowth matches the D1 rev3 mock (Base / Alolan empty; Galarian owned; Gigantamax catalog-only). Charizard is a second EXAMPLE species (Base owned)."
+  },
+  "species": [
+    {
+      "key": "meowth",
+      "dex": 52,
+      "owned": true,
+      "forms": {
+        "base": false,
+        "alolan": false,
+        "galarian": true,
+        "gigantamax": false
+      },
+      "acquired": []
+    },
+    {
+      "key": "charizard",
+      "dex": 6,
+      "owned": true,
+      "forms": {
+        "base": true,
+        "mega-x": false,
+        "mega-y": false,
+        "gigantamax": false
+      },
+      "acquired": []
+    }
+  ]
+}

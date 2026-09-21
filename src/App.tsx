@@ -7,6 +7,7 @@ import { PrintGrid } from './components/PrintGrid';
 import { SearchBar } from './components/SearchBar';
 import { loadSpeciesPrints } from './lib/client';
 import type { SpeciesPrintsResult } from './lib/fetchSpeciesPrints';
+import { ownershipMarkForPill } from './lib/ownedSpecies';
 import { getSpeciesByDex, resolveSpecies, type PokedexEntry } from './lib/pokedex';
 import {
   assignCardForm,
@@ -119,6 +120,7 @@ export default function App() {
               label="All forms"
               count={facets.all}
               selected={facet === 'all'}
+              owned={ownershipMarkForPill(species.n, 'all') === 'owned'}
               onSelect={() => setFacet('all')}
             />
             {facets.forms.map((form) => (
@@ -127,6 +129,7 @@ export default function App() {
                 label={form.label}
                 count={form.count}
                 selected={facet === form.id}
+                owned={ownershipMarkForPill(species.n, form.id) === 'owned'}
                 onSelect={() => setFacet(form.id)}
               />
             ))}

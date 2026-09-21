@@ -81,6 +81,18 @@ When a species has no matching prints, the UI says clearly that **no full-art / 
 
 Taxonomy lives in [`src/config/art-forward-taxonomy.ts`](src/config/art-forward-taxonomy.ts) (schema: [`src/config/art-forward-taxonomy.schema.json`](src/config/art-forward-taxonomy.schema.json)).
 
+## Species ownership (form pills)
+
+Form pills keep the existing **label + count badge** and add a D1 rev3 ownership mark (species-level, not per-tile stamps):
+
+- **Filled Poké Ball** (upside-down: red top / white bottom) — owns ≥1 full-art / illustration of that form
+- **Empty ring** — form exists in the catalog, none owned
+- **All forms** is a rollup: filled if any form is owned, empty ring if none
+
+Source of truth is the free in-repo seed [`src/data/owned-species.json`](src/data/owned-species.json) (Eric’s EXAMPLE collection — Meowth matches the D1 rev3 mock pattern; Charizard is a second example). The app reads it through the typed loader in [`src/lib/ownedSpecies.ts`](src/lib/ownedSpecies.ts). This is not a live inventory API.
+
+**Delibird** updates that JSON via pull request when prints are acquired. Form keys must match catalog ids (`base`, `alolan`, `galarian`, `mega-x`, …).
+
 ## Deploy
 
 Set `POKEMONTCG_API_KEY` in the host’s environment. Free runtime deps only (`react`, `react-dom`).

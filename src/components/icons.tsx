@@ -39,3 +39,40 @@ export function IconBack({ size = 22 }: IconProps) {
     </svg>
   );
 }
+
+/**
+ * D1 rev3 owned mark: filled Poké Ball flipped upside-down
+ * (red top / white bottom) vs the usual white-top rest pose.
+ */
+export function IconOwnedBall({ size = 14 }: IconProps) {
+  return (
+    <svg
+      className="ownership-ball"
+      viewBox="0 0 16 16"
+      width={size}
+      height={size}
+      aria-hidden="true"
+    >
+      <circle cx="8" cy="8" r="7.15" fill="#f4f4f5" />
+      <path d="M1.05 8a6.95 6.95 0 0 0 13.9 0Z" fill="#e3350d" />
+      <rect x="1" y="7.05" width="14" height="1.9" fill="#16151a" />
+      <circle cx="8" cy="8" r="2.35" fill="#16151a" />
+      <circle cx="8" cy="8" r="1.2" fill="#f4f4f5" />
+    </svg>
+  );
+}
+
+/** D1 rev3 catalog-only mark: empty ring. */
+export function IconUnownedRing({ size = 14 }: IconProps) {
+  return (
+    <svg
+      className="ownership-ring"
+      viewBox="0 0 16 16"
+      width={size}
+      height={size}
+      aria-hidden="true"
+    >
+      <circle cx="8" cy="8" r="5.6" fill="none" stroke="currentColor" strokeWidth="1.55" />
+    </svg>
+  );
+}
