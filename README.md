@@ -98,10 +98,12 @@ Update [`src/data/owned-species.json`](src/data/owned-species.json) via pull req
 ```json
 {
   "version": 1,
-  "updatedAt": "2026-09-21T00:00:00.000Z",
+  "updatedAt": "2026-09-21T00:32:33-07:00",
   "species": []
 }
 ```
+
+`updatedAt` is ISO-8601 (`Z` or offset, matching the staging draft). Empty `species[]` is valid (no owned marks). Seed rows below are Eric’s EXAMPLE collection so pills can be reviewed before Delibird writes acquisitions.
 
 Per-species row:
 

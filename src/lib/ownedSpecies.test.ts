@@ -18,6 +18,19 @@ describe('owned-species seed (Eric EXAMPLE collection)', () => {
     expect(OWNED_SPECIES_FILE.species.length).toBeGreaterThanOrEqual(2);
   });
 
+  it('accepts Delibird’s empty staging draft as a valid top-level document', () => {
+    // Exact shape from nomekop-ownership/owned-species.draft.json
+    const delibirdDraft = {
+      version: 1,
+      updatedAt: '2026-09-21T00:32:33-07:00',
+      species: [] as unknown[],
+    };
+    expect(Object.keys(delibirdDraft).sort()).toEqual(Object.keys(ownedJson).sort());
+    expect(delibirdDraft.version).toBe(OWNED_SPECIES_FILE.version);
+    expect(Array.isArray(delibirdDraft.species)).toBe(true);
+    expect(delibirdDraft.species).toEqual([]);
+  });
+
   it('keeps species.owned in sync with any form flag', () => {
     for (const row of OWNED_SPECIES_FILE.species) {
       expect(row.owned).toBe(Object.values(row.forms).some(Boolean));
