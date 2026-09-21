@@ -85,7 +85,7 @@ Taxonomy lives in [`src/config/art-forward-taxonomy.ts`](src/config/art-forward-
 
 Form pills keep the existing **label + count badge** and add a D1 rev3 ownership mark (species-level, not per-tile stamps):
 
-- **Filled Poké Ball** (upside-down: red top / white bottom) — owns ≥1 full-art / illustration of that form
+- **Filled Poké Ball** (standard orientation: red top / white bottom) — owns ≥1 full-art / illustration of that form
 - **Empty ring** — form exists in the catalog, none owned
 - **All forms** is a rollup: filled if any form is owned, empty ring if none
 

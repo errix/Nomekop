@@ -41,8 +41,8 @@ export function IconBack({ size = 22 }: IconProps) {
 }
 
 /**
- * D1 rev3 owned mark: filled Poké Ball flipped upside-down
- * (red top / white bottom) vs the usual white-top rest pose.
+ * D1 rev3 owned mark: filled Poké Ball in standard orientation
+ * (red top / white bottom).
  */
 export function IconOwnedBall({ size = 14 }: IconProps) {
   return (
@@ -54,7 +54,7 @@ export function IconOwnedBall({ size = 14 }: IconProps) {
       aria-hidden="true"
     >
       <circle cx="8" cy="8" r="7.15" fill="#f4f4f5" />
-      <path d="M1.05 8a6.95 6.95 0 0 0 13.9 0Z" fill="#e3350d" />
+      <path d="M1.05 8a6.95 6.95 0 0 1 13.9 0Z" fill="#e3350d" />
       <rect x="1" y="7.05" width="14" height="1.9" fill="#16151a" />
       <circle cx="8" cy="8" r="2.35" fill="#16151a" />
       <circle cx="8" cy="8" r="1.2" fill="#f4f4f5" />
