@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-21T17:42:49.000Z",
+  "updatedAt": "2026-09-22T07:58:47.000Z",
   "species": [
     {
       "key": "suicune",
@@ -86,6 +86,34 @@
         {
           "at": "2026-09-21T17:42:49.000Z",
           "raw": "Claydol"
+        }
+      ]
+    },
+    {
+      "key": "orthworm",
+      "dex": 968,
+      "owned": true,
+      "forms": {
+        "base": true
+      },
+      "acquired": [
+        {
+          "at": "2026-09-22T07:58:47.000Z",
+          "raw": "Orthworm"
+        }
+      ]
+    },
+    {
+      "key": "revavroom",
+      "dex": 966,
+      "owned": true,
+      "forms": {
+        "base": true
+      },
+      "acquired": [
+        {
+          "at": "2026-09-22T07:58:47.000Z",
+          "raw": "Revavroom"
         }
       ]
     }
