@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-22T07:58:47.000Z",
+  "updatedAt": "2026-09-24T17:51:12.000Z",
   "species": [
     {
       "key": "suicune",
@@ -114,6 +114,82 @@
         {
           "at": "2026-09-22T07:58:47.000Z",
           "raw": "Revavroom"
+        }
+      ]
+    },
+    {
+      "key": "drifloon",
+      "dex": 425,
+      "owned": true,
+      "forms": {
+        "base": true
+      },
+      "acquired": [
+        {
+          "at": "2026-09-24T03:12:41.000Z",
+          "raw": "Drifloon (Base) — Illustration Rare, 30th Celebration 136/128; Notion card photo via catalogs"
+        }
+      ]
+    },
+    {
+      "key": "magmortar",
+      "dex": 467,
+      "owned": true,
+      "forms": {
+        "base": true
+      },
+      "acquired": [
+        {
+          "at": "2026-09-24T04:19:44.000Z",
+          "raw": "Magmortar (Base) — Trainer Gallery Rare Holo, Crown Zenith Galarian Gallery GG03/GG70; Notion card photo via catalogs"
+        }
+      ]
+    },
+    {
+      "key": "meowth",
+      "dex": 52,
+      "owned": true,
+      "forms": {
+        "base": false,
+        "alolan": true,
+        "galarian": false,
+        "gigantamax": false
+      },
+      "acquired": [
+        {
+          "at": "2026-09-24T04:25:42.000Z",
+          "raw": "Alolan Meowth — Illustration Rare, 30th Celebration 139/128; Notion card photo via catalogs"
+        }
+      ]
+    },
+    {
+      "key": "lapras",
+      "dex": 131,
+      "owned": true,
+      "forms": {
+        "base": true,
+        "gigantamax": false
+      },
+      "acquired": [
+        {
+          "at": "2026-09-24T07:11:44.000Z",
+          "raw": "Lapras (Base) — Trainer Gallery Rare Holo, Crown Zenith Galarian Gallery GG05/GG70; Notion card photo via catalogs"
+        }
+      ]
+    },
+    {
+      "key": "absol",
+      "dex": 359,
+      "owned": true,
+      "forms": {
+        "base": true,
+        "mega": false,
+        "mega-z": false
+      },
+      "acquired": [
+        {
+          "at": "2026-09-24T07:14:48.000Z",
+          "raw": "Absol (Base) — Trainer Gallery Rare Holo, Crown Zenith Galarian Gallery GG16/GG70; Notion card photo via catalogs"
         }
       ]
     }

@@ -47,6 +47,11 @@ describe('owned-species seed (Eric’s first acquisitions)', () => {
       [344, 'claydol', true],
       [968, 'orthworm', true],
       [966, 'revavroom', true],
+      [425, 'drifloon', true],
+      [467, 'magmortar', true],
+      [52, 'meowth', true],
+      [131, 'lapras', true],
+      [359, 'absol', true],
     ]);
 
     const byDex = Object.fromEntries(ownedJson.species.map((row) => [row.dex, row]));
@@ -89,6 +94,51 @@ describe('owned-species seed (Eric’s first acquisitions)', () => {
     expect(byDex[966]?.forms).toEqual({ base: true });
     expect(byDex[966]?.acquired).toEqual([
       { at: '2026-09-22T07:58:47.000Z', raw: 'Revavroom' },
+    ]);
+
+    expect(byDex[425]?.forms).toEqual({ base: true });
+    expect(byDex[425]?.acquired).toEqual([
+      {
+        at: '2026-09-24T03:12:41.000Z',
+        raw: 'Drifloon (Base) — Illustration Rare, 30th Celebration 136/128; Notion card photo via catalogs',
+      },
+    ]);
+
+    expect(byDex[467]?.forms).toEqual({ base: true });
+    expect(byDex[467]?.acquired).toEqual([
+      {
+        at: '2026-09-24T04:19:44.000Z',
+        raw: 'Magmortar (Base) — Trainer Gallery Rare Holo, Crown Zenith Galarian Gallery GG03/GG70; Notion card photo via catalogs',
+      },
+    ]);
+
+    expect(byDex[52]?.forms).toEqual({
+      base: false,
+      alolan: true,
+      galarian: false,
+      gigantamax: false,
+    });
+    expect(byDex[52]?.acquired).toEqual([
+      {
+        at: '2026-09-24T04:25:42.000Z',
+        raw: 'Alolan Meowth — Illustration Rare, 30th Celebration 139/128; Notion card photo via catalogs',
+      },
+    ]);
+
+    expect(byDex[131]?.forms).toEqual({ base: true, gigantamax: false });
+    expect(byDex[131]?.acquired).toEqual([
+      {
+        at: '2026-09-24T07:11:44.000Z',
+        raw: 'Lapras (Base) — Trainer Gallery Rare Holo, Crown Zenith Galarian Gallery GG05/GG70; Notion card photo via catalogs',
+      },
+    ]);
+
+    expect(byDex[359]?.forms).toEqual({ base: true, mega: false, 'mega-z': false });
+    expect(byDex[359]?.acquired).toEqual([
+      {
+        at: '2026-09-24T07:14:48.000Z',
+        raw: 'Absol (Base) — Trainer Gallery Rare Holo, Crown Zenith Galarian Gallery GG16/GG70; Notion card photo via catalogs',
+      },
     ]);
   });
 
