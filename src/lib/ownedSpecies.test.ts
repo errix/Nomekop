@@ -52,6 +52,16 @@ describe('owned-species seed (Eric’s first acquisitions)', () => {
       [52, 'meowth', true],
       [131, 'lapras', true],
       [359, 'absol', true],
+      [470, 'leafeon', true],
+      [461, 'weavile', true],
+      [719, 'diancie', true],
+      [670, 'floette', true],
+      [87, 'dewgong', true],
+      [411, 'bastiodon', true],
+      [375, 'metang', true],
+      [663, 'talonflame', true],
+      [705, 'sliggoo', true],
+      [30, 'nidorina', true],
     ]);
 
     const byDex = Object.fromEntries(ownedJson.species.map((row) => [row.dex, row]));
@@ -139,6 +149,60 @@ describe('owned-species seed (Eric’s first acquisitions)', () => {
         at: '2026-09-24T07:14:48.000Z',
         raw: 'Absol (Base) — Trainer Gallery Rare Holo, Crown Zenith Galarian Gallery GG16/GG70; Notion card photo via catalogs',
       },
+    ]);
+
+    expect(byDex[470]?.forms).toEqual({ base: true });
+    expect(byDex[470]?.acquired).toEqual([
+      { at: '2026-09-25T20:59:15.000Z', raw: 'Leafeon (Base) — via catalogs' },
+    ]);
+
+    expect(byDex[461]?.forms).toEqual({ base: true });
+    expect(byDex[461]?.acquired).toEqual([
+      { at: '2026-10-12T21:44:15.000Z', raw: 'Weavile (Base) — via catalogs' },
+    ]);
+
+    expect(byDex[719]?.forms).toEqual({ base: true, mega: false });
+    expect(byDex[719]?.acquired).toEqual([
+      { at: '2026-10-12T21:44:15.000Z', raw: 'Diancie (Base) — via catalogs' },
+    ]);
+
+    expect(byDex[670]?.forms).toEqual({
+      base: false,
+      'eternal-flower': false,
+      mega: true,
+    });
+    expect(byDex[670]?.acquired).toEqual([
+      { at: '2026-10-12T21:44:15.000Z', raw: 'Floette (Mega) — via catalogs' },
+    ]);
+
+    expect(byDex[87]?.forms).toEqual({ base: true });
+    expect(byDex[87]?.acquired).toEqual([
+      { at: '2026-10-12T21:44:15.000Z', raw: 'Dewgong (Base) — via catalogs' },
+    ]);
+
+    expect(byDex[411]?.forms).toEqual({ base: true });
+    expect(byDex[411]?.acquired).toEqual([
+      { at: '2026-10-12T21:44:15.000Z', raw: 'Bastiodon (Base) — via catalogs' },
+    ]);
+
+    expect(byDex[375]?.forms).toEqual({ base: true });
+    expect(byDex[375]?.acquired).toEqual([
+      { at: '2026-10-12T21:44:15.000Z', raw: 'Metang (Base) — via catalogs' },
+    ]);
+
+    expect(byDex[663]?.forms).toEqual({ base: true });
+    expect(byDex[663]?.acquired).toEqual([
+      { at: '2026-10-12T21:44:15.000Z', raw: 'Talonflame (Base) — via catalogs' },
+    ]);
+
+    expect(byDex[705]?.forms).toEqual({ base: true, hisuian: false });
+    expect(byDex[705]?.acquired).toEqual([
+      { at: '2026-10-12T21:44:15.000Z', raw: 'Sliggoo (Base) — via catalogs' },
+    ]);
+
+    expect(byDex[30]?.forms).toEqual({ base: true });
+    expect(byDex[30]?.acquired).toEqual([
+      { at: '2026-10-12T21:44:15.000Z', raw: 'Nidorina (Base) — via catalogs' },
     ]);
   });
 
